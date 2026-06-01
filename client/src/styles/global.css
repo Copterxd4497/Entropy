@@ -99,7 +99,7 @@ body {
 .app-body {
   display: flex;
   flex: 1;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* ── Topnav ── */
@@ -483,7 +483,8 @@ body {
 
 /* ── Right Panel ── */
 .right-panel {
-  width: 260px;
+  flex: 1;
+  max-width: 300px;
   background: var(--bg-raised);
   border-left: 1px solid var(--border);
   padding: 16px;

@@ -61,6 +61,6 @@ const problemSchema = new mongoose.Schema({
   acceptanceRate: Number,
 });
 
-const Problem = mongoose.model("Problem", problemSchema);
+const Problem = mongoose.model("Problem", problemSchema, "myDatabase");
 
 export default Problem;

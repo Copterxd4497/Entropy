@@ -122,6 +122,7 @@ export default function ProblemTable({ search, setSearch, activeTags }) {
                   ? "#1e1e1e"
                   : "#1a1a1a",
             }}
+            onClick={() => (window.location.href = "/LC_Problem")}
           >
             {/* Status */}
             <div className="problem-table__status">
