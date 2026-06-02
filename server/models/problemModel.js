@@ -1,15 +1,19 @@
 import mongoose from "mongoose";
 
+import descriptionSchema from "./schemas/descriptionSchema.js";
+import exampleSchema from "./schemas/exampleSchema.js";
+import testCaseSchema from "./schemas/testCaseSchema.js";
+
 const problemSchema = new mongoose.Schema({
+  id: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
+
   title: {
     type: String,
     required: true,
-  },
-
-  slug: {
-    type: String,
-    required: true,
-    unique: true,
   },
 
   difficulty: {
@@ -18,49 +22,21 @@ const problemSchema = new mongoose.Schema({
     required: true,
   },
 
-  topics: [String],
+  solved: Boolean,
 
-  description: {
-    type: String,
-    required: true,
-  },
+  likes: String,
+  dislikes: String,
+  online: Number,
 
-  examples: [
-    {
-      input: String,
-      output: String,
-      explanation: String,
-    },
-  ],
+  tags: [String],
+  companies: [String],
 
+  description: [descriptionSchema],
+  examples: [exampleSchema],
   constraints: [String],
-
-  starterCode: {
-    javascript: String,
-    python: String,
-    java: String,
-  },
-
-  testCases: [
-    {
-      input: mongoose.Schema.Types.Mixed,
-      expectedOutput: mongoose.Schema.Types.Mixed,
-    },
-  ],
-
-  solution: {
-    type: String,
-  },
-
-  explanation: {
-    type: String,
-  },
-
-  order: Number,
-
-  acceptanceRate: Number,
+  testCases: [testCaseSchema],
 });
 
-const Problem = mongoose.model("Problem", problemSchema, "myDatabase");
+const Problem = mongoose.model("Problem", problemSchema, "problems");
 
 export default Problem;

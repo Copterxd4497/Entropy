@@ -1,9 +1,6 @@
-import { useState } from "react";
-import {
-  problems as allProblems,
-  DIFFICULTY_COLOR,
-  DIFFICULTY_BG,
-} from "../../data/ProblamTableData";
+import { useState, useEffect } from "react";
+
+import { DIFFICULTY_COLOR, DIFFICULTY_BG } from "../../data/ProblamTableData";
 
 function ControlsRow({
   search,
@@ -75,8 +72,18 @@ export default function ProblemTable({ search, setSearch, activeTags }) {
   const [diffFilter, setDiffFilter] = useState("All");
   const [hoveredRow, setHoveredRow] = useState(null);
   const [starred, setStarred] = useState({ 1: true });
+  const [problems, setProblems] = useState([]);
 
-  const filtered = allProblems.filter((p) => {
+  useEffect(() => {
+    fetch("http://localhost:5000/api/problems/getProblemTopics")
+      .then((res) => res.json())
+      .then((data) => setProblems(data?.data ?? data))
+      .catch((error) => {
+        console.error("Failed to load problem topics:", error);
+      });
+  }, []);
+
+  const filtered = problems.filter((p) => {
     const matchSearch = p.title.toLowerCase().includes(search.toLowerCase());
     const matchDiff = diffFilter === "All" || p.difficulty === diffFilter;
     const matchTag =
@@ -84,7 +91,7 @@ export default function ProblemTable({ search, setSearch, activeTags }) {
     return matchSearch && matchDiff && matchTag;
   });
 
-  const totalSolved = allProblems.filter((p) => p.solved).length;
+  const totalSolved = problems.filter((p) => p.solved).length;
 
   return (
     <>
@@ -94,7 +101,7 @@ export default function ProblemTable({ search, setSearch, activeTags }) {
         diffFilter={diffFilter}
         setDiffFilter={setDiffFilter}
         totalSolved={totalSolved}
-        total={allProblems.length}
+        total={problems.length}
       />
 
       <div className="problem-table">

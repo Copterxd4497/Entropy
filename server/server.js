@@ -11,7 +11,9 @@ const DB = process.env.MONGO_URI.replace(
 );
 
 mongoose
-  .connect(DB)
+  .connect(DB, {
+    dbName: "myDatabase",
+  })
   .then(() => {
     console.log("MongoDB Connected");
 
