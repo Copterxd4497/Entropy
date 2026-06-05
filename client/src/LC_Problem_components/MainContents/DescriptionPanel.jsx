@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { problems } from "../../LC_Problem_data/problemsData";
+import { useProblemContext } from "../../context/ProblemContext";
 
 /* ── Tab bar ── */
 const TABS = [
@@ -69,7 +69,7 @@ function Example({ ex }) {
 }
 
 /* ── Footer ── */
-function Footer() {
+function Footer({ problem }) {
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
 
@@ -82,7 +82,7 @@ function Footer() {
           setDisliked(false);
         }}
       >
-        👍 {problems.likes}
+        👍 {problem?.likes || 0}
       </button>
       <button
         className={`desc__footer-btn${disliked ? " desc__footer-btn--active" : ""}`}
@@ -91,7 +91,7 @@ function Footer() {
           setLiked(false);
         }}
       >
-        👎 {problems.dislikes}
+        👎 {problem?.dislikes || 0}
       </button>
       <span className="desc__footer-sep">|</span>
       <button className="desc__footer-btn">⭐</button>
@@ -100,22 +100,24 @@ function Footer() {
 
       <div className="desc__online">
         <div className="desc__online-dot" />
-        {problems.online.toLocaleString()} Online
+        {problem?.online ? problem.online.toLocaleString() : 0} Online
       </div>
     </div>
   );
 }
 
 /* ── Main description content ── */
-function DescriptionContent() {
+function DescriptionContent({ problem }) {
+  if (!problem) return null;
+
   return (
     <div className="description">
       {/* Title row */}
       <div className="desc__title-row">
         <h1 className="desc__title">
-          {problems.id}. {problems.title}
+          {problem.id}. {problem.title}
         </h1>
-        {problems.solved && (
+        {problem.solved && (
           <div className="desc__solved">
             <span>Solved</span>
             <span>✅</span>
@@ -125,8 +127,8 @@ function DescriptionContent() {
 
       {/* Badges */}
       <div className="desc__badges">
-        <span className={`badge badge--${problems.difficulty.toLowerCase()}`}>
-          {problems.difficulty}
+        <span className={`badge badge--${problem.difficulty.toLowerCase()}`}>
+          {problem.difficulty}
         </span>
         <button className="badge badge--tag">🏷 Topics</button>
         <button className="badge badge--tag">🏢 Companies</button>
@@ -135,12 +137,12 @@ function DescriptionContent() {
 
       {/* Body text */}
       <div className="desc__body">
-        {problems.description.map((block, i) => (
+        {problem.description?.map((block, i) => (
           <RichPara key={i} parts={block.parts} />
         ))}
 
         {/* Examples */}
-        {problems.examples.map((ex) => (
+        {problem.examples?.map((ex) => (
           <div key={ex.id}>
             <p className="desc__section-title">Example {ex.id}:</p>
             <Example ex={ex} />
@@ -149,7 +151,7 @@ function DescriptionContent() {
 
         {/* Constraints */}
         <p className="desc__section-title">Constraints:</p>
-        {problems.constraints.map((c, i) => (
+        {problem.constraints?.map((c, i) => (
           <div key={i} className="desc__constraint">
             <span className="desc__constraint-dot">•</span>
             <span className="desc__constraint-text">{c}</span>
@@ -181,17 +183,18 @@ function Placeholder({ label }) {
 /* ── Exported component ── */
 export default function DescriptionPanel() {
   const [activeTab, setActiveTab] = useState("description");
+  const { problem } = useProblemContext();
 
   return (
     <div className="left-panel" style={{ flex: 1 }}>
       <TabBar active={activeTab} setActive={setActiveTab} />
 
-      {activeTab === "description" && <DescriptionContent />}
+      {activeTab === "description" && <DescriptionContent problem={problem} />}
       {activeTab === "editorial" && <Placeholder label="Editorial" />}
       {activeTab === "solutions" && <Placeholder label="Solutions" />}
       {activeTab === "submissions" && <Placeholder label="Submissions" />}
 
-      <Footer />
+      <Footer problem={problem} />
     </div>
   );
 }

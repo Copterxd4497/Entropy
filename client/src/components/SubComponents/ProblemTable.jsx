@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { DIFFICULTY_COLOR, DIFFICULTY_BG } from "../../data/ProblamTableData";
 
@@ -69,6 +70,7 @@ function DifficultyBadge({ difficulty }) {
 }
 
 export default function ProblemTable({ search, setSearch, activeTags }) {
+  const navigate = useNavigate();
   const [diffFilter, setDiffFilter] = useState("All");
   const [hoveredRow, setHoveredRow] = useState(null);
   const [starred, setStarred] = useState({ 1: true });
@@ -130,7 +132,7 @@ export default function ProblemTable({ search, setSearch, activeTags }) {
                   : "#1a1a1a",
             }}
             //The URL button🎉🎉🎉
-            onClick={() => (window.location.href = "/LC_Problem")}
+            onClick={() => navigate(`/problem/${problem.id}`)}
           >
             {/* Status */}
             <div className="problem-table__status">

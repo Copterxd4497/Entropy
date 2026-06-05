@@ -48,3 +48,32 @@ export const getProblemTopics = async (req, res) => {
     });
   }
 };
+
+export const problem = async (req, res) => {
+  try {
+    // Handle both numeric IDs and MongoDB ObjectIds
+    const id = req.params.id;
+    const isNumeric = !isNaN(id);
+
+    let problem;
+    if (isNumeric) {
+      // Search by numeric id field
+      problem = await Problem.findOne({ id: parseInt(id) });
+    } else {
+      // Search by MongoDB ObjectId
+      problem = await Problem.findById(id);
+    }
+
+    if (!problem) {
+      return res.status(404).json({
+        message: "Problem not found",
+      });
+    }
+
+    res.json(problem);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
