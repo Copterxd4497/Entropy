@@ -1,3 +1,4 @@
+//This component creates a toggle switch with two buttons: "Original" and "My Input"
 export default function InputModeToggle({ mode, setMode }) {
   return (
     <div className="input-mode-toggle" role="group" aria-label="Input source">

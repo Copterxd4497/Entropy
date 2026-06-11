@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export function useProblem(problemId) {
+export function useProblemQuiz(problemQuizId) {
   const [problem, setProblem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ export function useProblem(problemId) {
     setLoading(true);
     setError(null);
 
-    fetch(`/api/problems/${problemId}`)
+    fetch(`/api/problems//Quiz/${problemQuizId}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Problem not found (${res.status})`);
@@ -32,5 +32,5 @@ export function useProblem(problemId) {
       .finally(() => setLoading(false));
   }, [problemId]);
 
-  return { problem, loading, error, setProblem };
+  return { problem, loading, error };
 }

@@ -1,5 +1,6 @@
 import { problems } from "../LC_Problem_data/problemsData";
 
+//Pyodide lets Python run inside the browser.
 const PYODIDE_VERSION = "0.29.4";
 const PYODIDE_CDN = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
 

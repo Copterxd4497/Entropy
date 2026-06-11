@@ -1,0 +1,212 @@
+/* Styles specific to the ScratchCanvas component */
+
+/* ── Canvas header ── */
+.canvas-header {
+  display: flex;
+  align-items: center;
+  height: 42px;
+  border-bottom: 1px solid var(--border);
+  padding: 0 14px;
+  gap: 10px;
+  flex-shrink: 0;
+  background: var(--bg-panel);
+}
+.canvas-header__title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--tx-2);
+  font-weight: 500;
+}
+.canvas-header__title-icon {
+  font-size: 14px;
+}
+.canvas-header__spacer {
+  flex: 1;
+}
+.canvas-header__badge {
+  padding: 2px 9px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(91, 163, 245, 0.13);
+  color: var(--blue);
+  border: 1px solid rgba(91, 163, 245, 0.25);
+  font-family: var(--f-display);
+  letter-spacing: 0.3px;
+}
+
+/* ── Canvas wrapper ── */
+.canvas-wrap {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background: var(--canvas-bg);
+}
+.canvas-wrap canvas {
+  display: block;
+  touch-action: none;
+}
+
+/* ── Toolbar left sidebar (tool palette) ── */
+.tool-palette {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 6px;
+  z-index: 20;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+.tool-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--tx-3);
+  transition:
+    background var(--tr),
+    color var(--tr);
+  cursor: pointer;
+  position: relative;
+}
+.tool-btn:hover {
+  background: var(--bg-hover);
+  color: var(--tx-1);
+}
+.tool-btn--active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+.tool-btn__tip {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: var(--tx-2);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--tr);
+}
+.tool-btn:hover .tool-btn__tip {
+  opacity: 1;
+}
+
+/* ── Options bar (top of canvas) ── */
+.options-bar {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 6px 12px;
+  z-index: 20;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+.color-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition:
+    border-color var(--tr),
+    transform var(--tr);
+  flex-shrink: 0;
+}
+.color-swatch--active {
+  border-color: #fff;
+  transform: scale(1.2);
+}
+.color-swatch:hover {
+  transform: scale(1.15);
+}
+.options-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+}
+.stroke-btn {
+  width: 32px;
+  height: 22px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--tr);
+}
+.stroke-btn:hover {
+  background: var(--bg-hover);
+}
+.stroke-btn--active {
+  background: var(--accent-dim);
+}
+
+/* ── Canvas action buttons (top-right) ── */
+.canvas-actions {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  display: flex;
+  gap: 5px;
+  z-index: 20;
+}
+.canvas-action-btn {
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--tx-2);
+  transition:
+    background var(--tr),
+    color var(--tr);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.canvas-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--tx-1);
+}
+.canvas-action-btn--danger:hover {
+  background: var(--red-dim);
+  color: var(--red);
+  border-color: var(--red);
+}
+
+/* ── Math result overlay ── */
+.math-overlay {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(255, 161, 22, 0.12);
+  border: 1px solid var(--accent-ring);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  font-family: var(--f-mono);
+  font-size: 13px;
+  color: var(--accent);
+  z-index: 25;
+}

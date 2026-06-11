@@ -2,7 +2,14 @@ import { useState, useRef, useCallback } from "react";
 import CodeEditor from "../SubContents/CodeEditor";
 import TestPanel from "../SubContents/TestPanel";
 
-export default function RightPanel({ output, lang, setLang, codes, setCodes }) {
+export default function RightPanel({
+  consoleOutput,
+  testResults,
+  lang,
+  setLang,
+  codes,
+  setCodes,
+}) {
   const [editorPct, setEditorPct] = useState(62);
   const dragging = useRef(false);
   const [panelMode, setPanelMode] = useState("test");
@@ -74,7 +81,12 @@ export default function RightPanel({ output, lang, setLang, codes, setCodes }) {
           minHeight: 0,
         }}
       >
-        <TestPanel output={output} mode={panelMode} setMode={setPanelMode} />
+        <TestPanel
+          consoleOutput={consoleOutput}
+          testResults={testResults}
+          mode={panelMode}
+          setMode={setPanelMode}
+        />
       </div>
     </div>
   );

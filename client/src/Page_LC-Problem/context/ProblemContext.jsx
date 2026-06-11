@@ -1,3 +1,5 @@
+//Your code creates a shared storage area for problem, loading, and error so that any component inside ProblemProvider can access them without passing props through every intermediate component.
+
 import { createContext, useContext } from "react";
 
 const ProblemContext = createContext(null);

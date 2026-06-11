@@ -1,17 +1,30 @@
+//This converts a run result into text for display.
 function formatOutput(result) {
-  if (!result) return null;
+  if (!result) return "Run Something";
   if (result.error && !result.stdout) return result.error;
   return result.output ?? "(no output)";
 }
 
-export default function TestPanel({ output, mode, setMode }) {
-  const text = formatOutput(output);
-  const results = Array.isArray(output) ? output : null;
+export default function TestPanel({
+  consoleOutput,
+  testResults,
+  mode,
+  setMode,
+}) {
+  //create console text
+  const text = formatOutput(consoleOutput);
+
+  //check if output is test results
+  const results = testResults;
+
+  //Count Pass/Fail
   const passedCount = results?.filter((tc) => tc.pass).length ?? 0;
   const failedCount = results ? results.length - passedCount : 0;
 
   return (
     <div className="bottom-panel">
+      {/*Header*/}
+      {/*Creates [Test Cases] / [Console]*/}
       <div className="panel-header">
         <div className="panel-tabs">
           <button

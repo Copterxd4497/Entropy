@@ -1,3 +1,5 @@
+//creates the logic for a draggable vertical divider between two panels.
+
 import { useState, useCallback, useRef } from "react";
 
 /**
@@ -30,7 +32,7 @@ export function useResizable(initial = 40, min = 20, max = 75) {
       window.addEventListener("mousemove", onMove);
       window.addEventListener("mouseup", onUp);
     },
-    [min, max]
+    [min, max],
   );
 
   return [leftPct, onMouseDown];

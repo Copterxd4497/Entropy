@@ -2,65 +2,81 @@ import { useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/lc-problemStyle.css";
 
-import Toolbar from "../LC_Problem_components/MainContents/Toolbar";
-import DescriptionPanel from "../LC_Problem_components/MainContents/DescriptionPanel";
-import RightPanel from "../LC_Problem_components/MainContents/RightPanel";
+//LC_Problem_components
+import Toolbar from "../Page_LC-Problem/LC_Problem_components/MainContents/Toolbar";
+import DescriptionPanel from "../Page_LC-Problem/LC_Problem_components/MainContents/DescriptionPanel";
+import RightPanel from "../Page_LC-Problem/LC_Problem_components/MainContents/RightPanel";
+
+//hooks & context
 import { useResizable } from "../hooks/useResizable";
 import { useProblem } from "../hooks/useProblem";
-import { ProblemProvider } from "../context/ProblemContext";
+import { ProblemProvider } from "../Page_LC-Problem/context/ProblemContext";
 
-import { codeTemplates } from "../constant/codeTemplates";
-import { executeConsole, executeCode } from "../utils/runCode";
+//constant & utils
+import { codeTemplates } from "../Page_LC-Problem/constant/codeTemplates";
+import { executeConsole, executeCode } from "../Page_LC-Problem/utils/runCode";
 
 export default function LC_Problem() {
   const { id } = useParams();
-  const { problem, loading, error } = useProblem(id);
+  const { problem, loading, error, setProblem } = useProblem(id);
   const [leftPct, onDividerMouseDown] = useResizable(36, 20, 50);
   const [lang, setLang] = useState("Python");
   const [codes, setCodes] = useState(codeTemplates);
-  const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
 
+  //console, test
+  const [consoleOutput, setConsoleOutput] = useState(null);
+  const [testResults, setTestResults] = useState(null);
+
+  //handleRun
   const handleRun = useCallback(async () => {
     setIsRunning(true);
 
     try {
       const result = await executeConsole(lang, codes[lang]);
-
-      setOutput(result);
-    } catch (err) {
-      setOutput({
-        output: err.message,
-        error: err.message,
-      });
+      setConsoleOutput(result);
     } finally {
       setIsRunning(false);
     }
   }, [lang, codes]);
 
+  //handleSubmit
   const handleSubmit = useCallback(async () => {
     setIsRunning(true);
 
     try {
-      const result = await executeCode(
-        lang,
-        codes[lang],
-        problem?.testCases || [],
-      );
-
-      setOutput(result);
-    } catch (err) {
-      setOutput([
-        {
-          pass: false,
-          output: err.message,
-          error: err.message,
-        },
+      const [consoleResult, testResult] = await Promise.all([
+        executeConsole(lang, codes[lang]),
+        executeCode(lang, codes[lang], problem?.testCases || []),
       ]);
+
+      // checking if problem is solved
+      const isSolved = testResult.length > 0 && testResult.every((t) => t.pass);
+
+      setConsoleOutput(consoleResult);
+      setTestResults(testResult);
+
+      const newStatus = isSolved ? "solved" : "attempted";
+
+      if (setProblem) {
+        setProblem((prev) =>
+          prev ? { ...prev, solved: isSolved, status: newStatus } : prev,
+        );
+      }
+
+      await fetch(`http://localhost:5000/api/problems/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: newStatus,
+        }),
+      });
     } finally {
       setIsRunning(false);
     }
-  }, [lang, codes, problem?.testCases]);
+  }, [lang, codes, problem?.testCases, id]);
 
   if (loading) {
     return (
@@ -117,7 +133,8 @@ export default function LC_Problem() {
           <div className="divider" onMouseDown={onDividerMouseDown} />
 
           <RightPanel
-            output={output}
+            consoleOutput={consoleOutput}
+            testResults={testResults}
             lang={lang}
             setLang={setLang}
             codes={codes}
