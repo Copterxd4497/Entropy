@@ -31,7 +31,7 @@ const scratchProblemSchema = new mongoose.Schema({
   description: [descriptionSchema],
   examples: [exampleSchema],
   constraints: [String],
-  testCases: [testCaseSchema],
+  answer: String,
 });
 
 const ScratchProblem = mongoose.model(

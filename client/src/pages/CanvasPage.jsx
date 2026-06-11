@@ -12,31 +12,58 @@ import { useResizableH } from "../Page_LC-Canvas/hooks/useResizable";
 export default function Canvas_Problem() {
   const { type, id } = useParams();
   const normalizedType = type === "canvas" ? "scratch" : type;
-  const { problem, loading, error } = useProblem(normalizedType, id);
+  const { problem, loading, error, setProblem } = useProblem(
+    normalizedType,
+    id,
+  );
   const [leftPct, onDividerMouseDown] = useResizableH(41, 22, 68);
   const [results, setResults] = useState(null);
+  const [isRunning, setIsRunning] = useState(false);
 
-  const handleRun = () => {
-    setResults([
-      {
-        input: "nums=[2,7,11,15], target=9",
-        output: "[0,1]",
-        expected: "[0,1]",
-        pass: true,
-      },
-      {
-        input: "nums=[3,2,4], target=6",
-        output: "[1,2]",
-        expected: "[1,2]",
-        pass: true,
-      },
-      {
-        input: "nums=[3,3], target=6",
-        output: "[0,1]",
-        expected: "[0,1]",
-        pass: true,
-      },
-    ]);
+  const handleSubmit = async (input) => {
+    // Get expected answer from first test case
+    const expectedAnswer =
+      problem?.examples?.[0]?.output || problem?.testCases?.[0]?.expected || "";
+
+    // Convert both to strings and normalize by removing whitespace
+    const userAnswer = String(input).trim();
+    const normalizedExpected = String(expectedAnswer).trim();
+
+    // Check if answer is correct (case-insensitive string comparison)
+    const isSolved =
+      userAnswer.toLowerCase() === normalizedExpected.toLowerCase();
+
+    // Update results immediately with correct/incorrect message
+    setResults({
+      input: input,
+      output: isSolved ? "Correct!" : "Incorrect!",
+      isSolved: isSolved,
+    });
+
+    // Update problem context immediately
+    if (isSolved && setProblem) {
+      setProblem((prev) =>
+        prev ? { ...prev, solved: true, status: "solved" } : prev,
+      );
+    }
+
+    // Send API request in background
+    if (isSolved) {
+      const statusBasePath = "/api/scratchProblems";
+      try {
+        await fetch(`${statusBasePath}/${id}/status`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status: "solved",
+          }),
+        });
+      } catch (err) {
+        console.error("Failed to update status:", err);
+      }
+    }
   };
 
   if (loading) {
@@ -72,7 +99,7 @@ export default function Canvas_Problem() {
   return (
     <ProblemProvider problem={problem} loading={loading} error={error}>
       <div className="app">
-        <Toolbar onRun={handleRun} />
+        <Toolbar />
 
         <div className="body">
           {/* Left: problem description */}
@@ -91,7 +118,11 @@ export default function Canvas_Problem() {
           <div className="divider-h" onMouseDown={onDividerMouseDown} />
 
           {/* Right: canvas scratchpad + tests */}
-          <RightPanel results={results} />
+          <RightPanel
+            results={results}
+            onSubmit={handleSubmit}
+            isRunning={isRunning}
+          />
         </div>
       </div>
     </ProblemProvider>

@@ -2,7 +2,7 @@ import ScratchCanvas from "../SubComponents/ScratchCanvas";
 import TestPanel from "../SubComponents/TestPanel";
 import { useResizableV } from "../../hooks/useResizable";
 
-export default function RightPanel({ results }) {
+export default function RightPanel({ results, onSubmit, isRunning }) {
   const [editorPct, onDividerMouseDown] = useResizableV(65, 30, 88);
 
   return (
@@ -31,7 +31,11 @@ export default function RightPanel({ results }) {
           overflow: "hidden",
         }}
       >
-        <TestPanel results={results} />
+        <TestPanel
+          results={results}
+          onSubmit={onSubmit}
+          isRunning={isRunning}
+        />
       </div>
     </div>
   );

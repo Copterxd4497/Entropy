@@ -1,91 +1,130 @@
 import { useState } from "react";
-import { problem } from "../../LC-Canvas_data/problem";
+import { useProblemContext } from "../../../Page_LC-Problem/context/ProblemContext";
 
-function TestcaseTab({ activeCase, setActiveCase }) {
+function ManualInputTab({ results, onSubmit, isRunning, isSolved }) {
+  const [input, setInput] = useState("");
+
   return (
-    <div>
-      <div className="tc-cases">
-        {problem.testCases.map((_, i) => (
-          <button
-            key={i}
-            className={`tc-case-btn${activeCase === i ? " tc-case-btn--active" : ""}`}
-            onClick={() => setActiveCase(i)}
-          >
-            Case {i + 1}
-          </button>
-        ))}
-      </div>
-      <div className="tc-label">Input</div>
+    <div style={{ padding: "10px" }}>
+      <div className="tc-label">Enter Answer</div>
       <textarea
         className="tc-input"
-        value={problem.testCases[activeCase].input}
-        readOnly
-        rows={2}
-      />
-      <div className="tc-label">Expected Output</div>
-      <div
-        className="tc-input"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Enter your answer here..."
+        rows={4}
+        disabled={isRunning}
         style={{
-          padding: "7px 10px",
-          fontFamily: "var(--f-mono)",
+          width: "100%",
+          padding: "8px",
+          marginBottom: "10px",
+          fontFamily: "var(--f-mono, monospace)",
           fontSize: 12,
-          color: "var(--tx-1)",
-          borderRadius: "var(--radius-sm)",
-          background: "var(--bg-raised)",
-          border: "1px solid var(--border)",
+          color: isRunning ? "#999" : "var(--tx-1, #eff2f6cc)",
+          borderRadius: "4px",
+          background: isRunning ? "#2a2a2a" : "var(--bg-raised, #1e1e1e)",
+          border: "1px solid var(--border, #2a2a2a)",
+          cursor: isRunning ? "not-allowed" : "text",
+        }}
+      />
+      <button
+        onClick={() => onSubmit(input)}
+        disabled={isRunning}
+        style={{
+          padding: "8px 16px",
+          background: isSolved ? "#00b8a3" : "var(--accent, #ffc01e)",
+          color: isSolved ? "#fff" : "#000",
+          border: "none",
+          borderRadius: "4px",
+          cursor: isRunning ? "not-allowed" : "pointer",
+          fontWeight: "600",
+          opacity: isRunning ? 0.8 : 1,
         }}
       >
-        {problem.testCases[activeCase].expected}
-      </div>
+        {isRunning ? "Submitting..." : isSolved ? "✓ Submit Again" : "Submit"}
+      </button>
     </div>
   );
 }
 
-function TestResultTab({ results }) {
+function TestResultTab({ results, isSolved }) {
   if (!results)
-    return <div className="result-empty">You must run your code first</div>;
-  const allPass = results.every((r) => r.pass);
+    return (
+      <div className="result-empty" style={{ padding: "10px" }}>
+        Submit your answer to see results
+      </div>
+    );
+
+  // Use results.isSolved if available, otherwise fall back to context isSolved
+  const isCorrect =
+    results?.isSolved !== undefined ? results.isSolved : isSolved;
+
   return (
-    <div>
+    <div style={{ padding: "10px" }}>
       <div style={{ marginBottom: 10 }}>
         <span
-          className={`result-chip result-chip--${allPass ? "pass" : "fail"}`}
+          style={{
+            background: isCorrect ? "#00b8a3" : "#ff375f",
+            color: "#fff",
+            padding: "4px 12px",
+            borderRadius: "4px",
+            fontSize: "12px",
+            fontWeight: "600",
+          }}
         >
-          {allPass ? "✓ Accepted" : "✗ Wrong Answer"}
-        </span>
-        <span style={{ color: "var(--tx-3)", fontSize: 12, marginLeft: 8 }}>
-          {results.filter((r) => r.pass).length}/{results.length} testcases
-          passed
+          {isCorrect ? "✓ Accepted" : "✗ Wrong Answer"}
         </span>
       </div>
-      {results.map((r, i) => (
-        <div key={i} className="result-card">
-          <strong>Case {i + 1}:</strong>{" "}
-          <span style={{ color: r.pass ? "var(--green)" : "var(--red)" }}>
-            {r.pass ? "✓ Passed" : "✗ Failed"}
-          </span>
-          {"\n"}
-          <strong>Input:</strong> {r.input}
-          {"\n"}
-          <strong>Output:</strong> {r.output}
-          {"\n"}
-          <strong>Expected:</strong> {r.expected}
+      <div className="result-card">
+        <strong>Your Answer:</strong>
+        <textarea
+          readOnly
+          value={results.input}
+          rows={2}
+          style={{
+            width: "100%",
+            marginTop: "4px",
+            padding: "7px 10px",
+            fontFamily: "var(--f-mono, monospace)",
+            fontSize: 12,
+            color: "var(--tx-1, #eff2f6cc)",
+            borderRadius: "4px",
+            background: "var(--bg-raised, #1e1e1e)",
+            border: "1px solid var(--border, #2a2a2a)",
+            marginBottom: "10px",
+          }}
+        />
+        <strong>Status:</strong>
+        <div
+          style={{
+            marginTop: "4px",
+            padding: "7px 10px",
+            fontFamily: "var(--f-mono, monospace)",
+            fontSize: 12,
+            color: isCorrect ? "#00b8a3" : "#ff375f",
+            borderRadius: "4px",
+            background: "var(--bg-raised, #1e1e1e)",
+            border: "1px solid var(--border, #2a2a2a)",
+          }}
+        >
+          {results.output}
         </div>
-      ))}
+      </div>
     </div>
   );
 }
 
-export default function TestPanel({ results }) {
-  const [active, setActive] = useState("testcase");
-  const [activeCase, setActiveCase] = useState(0);
+export default function TestPanel({ results, onSubmit, isRunning }) {
+  const [active, setActive] = useState("input");
+  const { problem } = useProblemContext();
+  const isSolved = problem?.solved || false;
 
   return (
     <div className="bottom-panel">
       <div className="bottom-tabs">
         {[
-          { id: "testcase", icon: "☐", label: "Testcase" },
-          { id: "testresult", icon: ">_", label: "Test Result" },
+          { id: "input", icon: "⌨", label: "Input" },
+          { id: "output", icon: ">_", label: "Output" },
         ].map((t) => (
           <button
             key={t.id}
@@ -98,10 +137,17 @@ export default function TestPanel({ results }) {
         ))}
       </div>
       <div className="bottom-content">
-        {active === "testcase" && (
-          <TestcaseTab activeCase={activeCase} setActiveCase={setActiveCase} />
+        {active === "input" && (
+          <ManualInputTab
+            results={results}
+            onSubmit={onSubmit}
+            isRunning={isRunning}
+            isSolved={isSolved}
+          />
         )}
-        {active === "testresult" && <TestResultTab results={results} />}
+        {active === "output" && (
+          <TestResultTab results={results} isSolved={isSolved} />
+        )}
       </div>
     </div>
   );
