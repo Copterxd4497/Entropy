@@ -1,14 +1,18 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import "../styles/LC-Canvas_styles/LC-Canvasglobal.css";
 
 import Toolbar from "../Page_LC-Canvas/LC-Canvas_components/MainComponents/Toolbar";
 import DescriptionPanel from "../Page_LC-Canvas/LC-Canvas_components/MainComponents/DescriptionPanel";
 import RightPanel from "../Page_LC-Canvas/LC-Canvas_components/MainComponents/RightPanel";
 import { ProblemProvider } from "../Page_LC-Problem/context/ProblemContext";
-import { problem as defaultProblem } from "../Page_LC-Canvas/LC-Canvas_data/problem";
+import { useProblem } from "../hooks/useProblem";
 import { useResizableH } from "../Page_LC-Canvas/hooks/useResizable";
 
-export default function App() {
+export default function Canvas_Problem() {
+  const { type, id } = useParams();
+  const normalizedType = type === "canvas" ? "scratch" : type;
+  const { problem, loading, error } = useProblem(normalizedType, id);
   const [leftPct, onDividerMouseDown] = useResizableH(41, 22, 68);
   const [results, setResults] = useState(null);
 
@@ -35,8 +39,38 @@ export default function App() {
     ]);
   };
 
+  if (loading) {
+    return (
+      <div className="app">
+        <div style={{ padding: "2rem", textAlign: "center" }}>
+          Loading problem...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="app">
+        <div style={{ padding: "2rem", textAlign: "center", color: "red" }}>
+          Error: {error}
+        </div>
+      </div>
+    );
+  }
+
+  if (!problem) {
+    return (
+      <div className="app">
+        <div style={{ padding: "2rem", textAlign: "center" }}>
+          Problem not found
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <ProblemProvider problem={defaultProblem}>
+    <ProblemProvider problem={problem} loading={loading} error={error}>
       <div className="app">
         <Toolbar onRun={handleRun} />
 

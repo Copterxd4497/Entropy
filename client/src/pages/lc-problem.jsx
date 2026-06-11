@@ -17,8 +17,8 @@ import { codeTemplates } from "../Page_LC-Problem/constant/codeTemplates";
 import { executeConsole, executeCode } from "../Page_LC-Problem/utils/runCode";
 
 export default function LC_Problem() {
-  const { id } = useParams();
-  const { problem, loading, error, setProblem } = useProblem(id);
+  const { type, id } = useParams();
+  const { problem, loading, error, setProblem } = useProblem(type, id);
   const [leftPct, onDividerMouseDown] = useResizable(36, 20, 50);
   const [lang, setLang] = useState("Python");
   const [codes, setCodes] = useState(codeTemplates);
@@ -64,7 +64,10 @@ export default function LC_Problem() {
         );
       }
 
-      await fetch(`http://localhost:5000/api/problems/${id}/status`, {
+      const statusBasePath =
+        type === "scratch" ? "/api/scratchProblems" : "/api/problems";
+
+      await fetch(`${statusBasePath}/${id}/status`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

@@ -76,8 +76,9 @@ export default function ProblemTable({ search, setSearch, activeTags }) {
   const [starred, setStarred] = useState({ 1: true });
   const [problems, setProblems] = useState([]);
 
+  //fetch("http://localhost:5000/api/problems/getProblemTopics")
   useEffect(() => {
-    fetch("http://localhost:5000/api/problems/getProblemTopics")
+    fetch("http://localhost:5000/api/all-problems/get_all-problemTopics")
       .then((res) => res.json())
       .then((data) => setProblems(data?.data ?? data))
       .catch((error) => {
@@ -120,7 +121,7 @@ export default function ProblemTable({ search, setSearch, activeTags }) {
         {/* Rows */}
         {filtered.map((problem, idx) => (
           <div
-            key={problem.id}
+            key={`${problem.type || "problem"}-${problem.id}`}
             className="problem-table__row row-hover"
             onMouseEnter={() => setHoveredRow(problem.id)}
             onMouseLeave={() => setHoveredRow(null)}
@@ -131,8 +132,13 @@ export default function ProblemTable({ search, setSearch, activeTags }) {
                   ? "#1e1e1e"
                   : "#1a1a1a",
             }}
-            //The URL button🎉🎉🎉
-            onClick={() => navigate(`/problem/${problem.id}`)}
+            onClick={() =>
+              navigate(
+                `/problem/${
+                  problem.type === "scratch" ? "canvas" : "code"
+                }/${problem.id}`,
+              )
+            }
           >
             {/* Status */}
             <div className="problem-table__status">

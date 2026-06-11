@@ -1,0 +1,71 @@
+{
+  "problem": {
+    "id": 1,
+    "title": "Two Sum",
+    "difficulty": "Easy",
+    "solved": true,
+    "likes": "68.9K",
+    "dislikes": "2K",
+    "online": 1686,
+    "tags": ["Array", "Hash Table"],
+    "companies": ["Amazon", "Google", "Apple", "Adobe", "Microsoft"],
+    "description": [
+      {
+        "parts": [
+          { "text": "Given an array of integers " },
+          { "text": "nums", "code": true },
+          { "text": " and an integer " },
+          { "text": "target", "code": true },
+          { "text": ", return " },
+          {
+            "text": "indices of the two numbers such that they add up to ",
+            "italic": true
+          },
+          { "text": "target", "italic": true, "code": true },
+          { "text": ".", "italic": true }
+        ]
+      },
+      {
+        "parts": [
+          { "text": "You may assume that each input would have " },
+          { "text": "exactly one solution", "bold": true },
+          { "text": ", and you may not use the " },
+          { "text": "same", "italic": true },
+          { "text": " element twice." }
+        ]
+      },
+      {
+        "parts": [{ "text": "You can return the answer in any order." }]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "nums = [2,7,11,15], target = 9",
+        "output": "[0,1]",
+        "explanation": "Because nums[0] + nums[1] == 9, we return [0, 1]."
+      },
+      {
+        "id": 2,
+        "input": "nums = [3,2,4], target = 6",
+        "output": "[1,2]"
+      },
+      {
+        "id": 3,
+        "input": "nums = [3,3], target = 6",
+        "output": "[0,1]"
+      }
+    ],
+    "constraints": [
+      "2 <= nums.length <= 10⁴",
+      "-10⁹ <= nums[i] <= 10⁹",
+      "-10⁹ <= target <= 10⁹",
+      "Only one valid answer exists."
+    ],
+    "testCases": [
+      { "input": "nums = [2,7,11,15]\ntarget = 9", "expected": "[0,1]" },
+      { "input": "nums = [3,2,4]\ntarget = 6", "expected": "[1,2]" },
+      { "input": "nums = [3,3]\ntarget = 6", "expected": "[0,1]" }
+    ]
+  }
+}

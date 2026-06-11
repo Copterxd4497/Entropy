@@ -14,14 +14,15 @@ const router = express.Router();
 
 router.post("/createProblem", createProblem);
 router.post("/createProblemTopics", createProblemTopics);
+
 router.get("/getProblems", getProblems);
 router.get("/getProblemTopics", getProblemTopics);
 
-//problem
-router.get("/:id", problem);
+// Put specific routes first
 router.get("/Quiz/:id", problemQuiz);
+router.get("/:id", problem);
 
-//Checking Status
+// Checking Status
 router.patch("/:id/status", updateProblemStatus);
 
 export default router;

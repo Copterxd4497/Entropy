@@ -1,0 +1,9 @@
+{
+  "id": "Number (unique)",
+  "title": "String (unique)",
+  "acceptance": "String",
+  "difficulty": "Enum: Easy|Medium|Hard",
+  "solved": "Boolean (default: false)",
+  "starred": "Boolean (default: false)",
+  "tags": "Array of Strings"
+}

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 
-export function useProblem(problemId) {
+export function useProblem(type, problemId) {
   const [problem, setProblem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!problemId) {
+    if (!type || !problemId) {
       setLoading(false);
       return;
     }
@@ -14,7 +14,13 @@ export function useProblem(problemId) {
     setLoading(true);
     setError(null);
 
-    fetch(`/api/problems/${problemId}`)
+    const normalizedType =
+      type === "code" ? "problem" : type === "canvas" ? "scratch" : type;
+
+    const basePath =
+      normalizedType === "scratch" ? "/api/scratchProblems" : "/api/problems";
+
+    fetch(`${basePath}/${problemId}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Problem not found (${res.status})`);
@@ -30,7 +36,7 @@ export function useProblem(problemId) {
         setProblem(null);
       })
       .finally(() => setLoading(false));
-  }, [problemId]);
+  }, [type, problemId]);
 
   return { problem, loading, error, setProblem };
 }
