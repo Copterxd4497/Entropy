@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { apiFetch } from "../utils/api";
 
 export function useProblem(type, problemId) {
   const [problem, setProblem] = useState(null);
@@ -20,7 +21,7 @@ export function useProblem(type, problemId) {
     const basePath =
       normalizedType === "scratch" ? "/api/scratchProblems" : "/api/problems";
 
-    fetch(`${basePath}/${problemId}`)
+    apiFetch(`${basePath}/${problemId}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Problem not found (${res.status})`);

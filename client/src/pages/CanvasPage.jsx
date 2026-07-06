@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/LC-Canvas_styles/LC-Canvasglobal.css";
 
+import { apiFetch } from "../utils/api";
 import Toolbar from "../Page_LC-Canvas/LC-Canvas_components/MainComponents/Toolbar";
 import DescriptionPanel from "../Page_LC-Canvas/LC-Canvas_components/MainComponents/DescriptionPanel";
 import RightPanel from "../Page_LC-Canvas/LC-Canvas_components/MainComponents/RightPanel";
@@ -51,7 +52,7 @@ export default function Canvas_Problem() {
     if (isSolved) {
       const statusBasePath = "/api/scratchProblems";
       try {
-        await fetch(`${statusBasePath}/${id}/status`, {
+        await apiFetch(`${statusBasePath}/${id}/status`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

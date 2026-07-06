@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { DIFFICULTY_COLOR, DIFFICULTY_BG } from "../../data/ProblamTableData";
+import { apiFetch } from "../../utils/api";
 
 function ControlsRow({
   search,
@@ -76,9 +77,8 @@ export default function ProblemTable({ search, setSearch, activeTags }) {
   const [starred, setStarred] = useState({ 1: true });
   const [problems, setProblems] = useState([]);
 
-  //fetch("http://localhost:5000/api/problems/getProblemTopics")
   useEffect(() => {
-    fetch("http://localhost:5000/api/all-problems/get_all-problemTopics")
+    apiFetch("/api/all-problems/get_all-problemTopics")
       .then((res) => res.json())
       .then((data) => setProblems(data?.data ?? data))
       .catch((error) => {

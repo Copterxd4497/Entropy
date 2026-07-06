@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/lc-problemStyle.css";
 
+import { apiFetch } from "../utils/api";
 //LC_Problem_components
 import Toolbar from "../Page_LC-Problem/LC_Problem_components/MainContents/Toolbar";
 import DescriptionPanel from "../Page_LC-Problem/LC_Problem_components/MainContents/DescriptionPanel";
@@ -67,7 +68,7 @@ export default function LC_Problem() {
       const statusBasePath =
         type === "scratch" ? "/api/scratchProblems" : "/api/problems";
 
-      await fetch(`${statusBasePath}/${id}/status`, {
+      await apiFetch(`${statusBasePath}/${id}/status`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

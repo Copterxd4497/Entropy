@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { apiFetch } from "../utils/api";
 
 export function useProblemQuiz(problemQuizId) {
   const [problem, setProblem] = useState(null);
@@ -6,7 +7,7 @@ export function useProblemQuiz(problemQuizId) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!problemId) {
+    if (!problemQuizId) {
       setLoading(false);
       return;
     }
@@ -14,7 +15,7 @@ export function useProblemQuiz(problemQuizId) {
     setLoading(true);
     setError(null);
 
-    fetch(`/api/problems//Quiz/${problemQuizId}`)
+    apiFetch(`/api/problems/Quiz/${problemQuizId}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Problem not found (${res.status})`);
@@ -30,7 +31,7 @@ export function useProblemQuiz(problemQuizId) {
         setProblem(null);
       })
       .finally(() => setLoading(false));
-  }, [problemId]);
+  }, [problemQuizId]);
 
   return { problem, loading, error };
 }
