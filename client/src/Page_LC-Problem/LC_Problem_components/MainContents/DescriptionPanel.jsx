@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useProblemContext } from "../../context/ProblemContext";
+import MathText from "../../../components/SubComponents/MathText";
 
 /* ── Tab bar ── */
 const TABS = [
@@ -115,7 +116,7 @@ function DescriptionContent({ problem }) {
       {/* Title row */}
       <div className="desc__title-row">
         <h1 className="desc__title">
-          {problem.id}. {problem.title}
+          {problem.id}. <MathText>{problem.title}</MathText>
         </h1>
         {problem.solved && (
           <div className="desc__solved">

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { DIFFICULTY_COLOR, DIFFICULTY_BG } from "../../data/ProblamTableData";
 import { apiFetch } from "../../utils/api";
+import MathText from "./MathText";
 
 function ControlsRow({
   search,
@@ -159,7 +160,7 @@ export default function ProblemTable({ search, setSearch, activeTags }) {
               }}
             >
               <span className="problem-table__num">{problem.id}.</span>
-              {problem.title}
+              <MathText>{problem.title}</MathText>
             </div>
 
             {/* Acceptance */}

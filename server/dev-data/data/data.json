@@ -1,0 +1,317 @@
+[
+  {
+    "id": 11,
+    "title": "Solve Linear Equation: 5x + 10 = 35",
+    "acceptance": "91.2%",
+    "difficulty": "Easy",
+    "solved": false,
+    "likes": "0",
+    "dislikes": "0",
+    "online": 0,
+    "tags": ["Algebra", "Math"],
+    "companies": [],
+    "description": [
+      {
+        "parts": [
+          { "text": "Solve the linear equation " },
+          { "text": "5x + 10 = 35", "code": true },
+          { "text": " and find the value of x." }
+        ]
+      },
+      {
+        "parts": [{ "text": "Use inverse operations to isolate the variable." }]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "5x + 10 = 35",
+        "output": "x = 5",
+        "explanation": "Subtract 10 from both sides: 5x = 25 → divide by 5: x = 5."
+      }
+    ],
+    "constraints": ["One variable only", "Linear equation", "Integer solution"],
+    "answer": "x = 5"
+  },
+  {
+    "id": 12,
+    "title": "Solve Linear Equation: 8x - 16 = 48",
+    "acceptance": "89.8%",
+    "difficulty": "Easy",
+    "solved": false,
+    "likes": "0",
+    "dislikes": "0",
+    "online": 0,
+    "tags": ["Algebra", "Math"],
+    "companies": [],
+    "description": [
+      {
+        "parts": [
+          { "text": "Solve the equation " },
+          { "text": "8x - 16 = 48", "code": true },
+          { "text": "." }
+        ]
+      },
+      {
+        "parts": [{ "text": "Find the value of x." }]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "8x - 16 = 48",
+        "output": "x = 8",
+        "explanation": "Add 16 to both sides: 8x = 64 → divide by 8."
+      }
+    ],
+    "constraints": ["One variable only", "Linear equation", "Integer solution"],
+    "answer": "x = 8"
+  },
+  {
+    "id": 13,
+    "title": "Solve Linear Equation: 3x + 9 = 24",
+    "acceptance": "92.5%",
+    "difficulty": "Easy",
+    "solved": false,
+    "likes": "0",
+    "dislikes": "0",
+    "online": 0,
+    "tags": ["Algebra", "Math"],
+    "companies": [],
+    "description": [
+      {
+        "parts": [
+          { "text": "Find x in the equation " },
+          { "text": "3x + 9 = 24", "code": true },
+          { "text": "." }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "3x + 9 = 24",
+        "output": "x = 5",
+        "explanation": "Subtract 9 from both sides, then divide by 3."
+      }
+    ],
+    "constraints": ["One variable only", "Linear equation", "Integer solution"],
+    "answer": "x = 5"
+  },
+  {
+    "id": 14,
+    "title": "Solve Linear Equation: 9x + 18 = 99",
+    "acceptance": "86.4%",
+    "difficulty": "Easy",
+    "solved": false,
+    "likes": "0",
+    "dislikes": "0",
+    "online": 0,
+    "tags": ["Algebra", "Math"],
+    "companies": [],
+    "description": [
+      {
+        "parts": [
+          { "text": "Solve " },
+          { "text": "9x + 18 = 99", "code": true },
+          { "text": " for x." }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "9x + 18 = 99",
+        "output": "x = 9",
+        "explanation": "Subtract 18, then divide by 9."
+      }
+    ],
+    "constraints": ["One variable only", "Linear equation", "Integer solution"],
+    "answer": "x = 9"
+  },
+  {
+    "id": 15,
+    "title": "Solve Linear Equation: 6x - 12 = 24",
+    "acceptance": "90.3%",
+    "difficulty": "Easy",
+    "solved": false,
+    "likes": "0",
+    "dislikes": "0",
+    "online": 0,
+    "tags": ["Algebra", "Math"],
+    "companies": [],
+    "description": [
+      {
+        "parts": [
+          { "text": "Determine the value of x in " },
+          { "text": "6x - 12 = 24", "code": true },
+          { "text": "." }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "6x - 12 = 24",
+        "output": "x = 6",
+        "explanation": "Add 12 to both sides, then divide by 6."
+      }
+    ],
+    "constraints": ["One variable only", "Linear equation", "Integer solution"],
+    "answer": "x = 6"
+  },
+  {
+    "id": 16,
+    "title": "Solve Linear Equation: 4x + 20 = 52",
+    "acceptance": "88.7%",
+    "difficulty": "Easy",
+    "solved": false,
+    "likes": "0",
+    "dislikes": "0",
+    "online": 0,
+    "tags": ["Algebra", "Math"],
+    "companies": [],
+    "description": [
+      {
+        "parts": [
+          { "text": "Solve the equation " },
+          { "text": "4x + 20 = 52", "code": true },
+          { "text": "." }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "4x + 20 = 52",
+        "output": "x = 8",
+        "explanation": "Subtract 20, then divide by 4."
+      }
+    ],
+    "constraints": ["One variable only", "Linear equation", "Integer solution"],
+    "answer": "x = 8"
+  },
+  {
+    "id": 17,
+    "title": "Solve Linear Equation: 12x - 36 = 60",
+    "acceptance": "85.9%",
+    "difficulty": "Easy",
+    "solved": false,
+    "likes": "0",
+    "dislikes": "0",
+    "online": 0,
+    "tags": ["Algebra", "Math"],
+    "companies": [],
+    "description": [
+      {
+        "parts": [
+          { "text": "Find the solution to " },
+          { "text": "12x - 36 = 60", "code": true },
+          { "text": "." }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "12x - 36 = 60",
+        "output": "x = 8",
+        "explanation": "Add 36 to both sides, then divide by 12."
+      }
+    ],
+    "constraints": ["One variable only", "Linear equation", "Integer solution"],
+    "answer": "x = 8"
+  },
+  {
+    "id": 18,
+    "title": "Solve Linear Equation: 2x + 14 = 30",
+    "acceptance": "94.1%",
+    "difficulty": "Easy",
+    "solved": false,
+    "likes": "0",
+    "dislikes": "0",
+    "online": 0,
+    "tags": ["Algebra", "Math"],
+    "companies": [],
+    "description": [
+      {
+        "parts": [
+          { "text": "Solve for x: " },
+          { "text": "2x + 14 = 30", "code": true }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "2x + 14 = 30",
+        "output": "x = 8",
+        "explanation": "Subtract 14 from both sides, then divide by 2."
+      }
+    ],
+    "constraints": ["One variable only", "Linear equation", "Integer solution"],
+    "answer": "x = 8"
+  },
+  {
+    "id": 19,
+    "title": "Solve Linear Equation: 10x - 50 = 20",
+    "acceptance": "87.6%",
+    "difficulty": "Easy",
+    "solved": false,
+    "likes": "0",
+    "dislikes": "0",
+    "online": 0,
+    "tags": ["Algebra", "Math"],
+    "companies": [],
+    "description": [
+      {
+        "parts": [
+          { "text": "Solve the equation " },
+          { "text": "10x - 50 = 20", "code": true },
+          { "text": "." }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "10x - 50 = 20",
+        "output": "x = 7",
+        "explanation": "Add 50 to both sides: 10x = 70 → divide by 10."
+      }
+    ],
+    "constraints": ["One variable only", "Linear equation", "Integer solution"],
+    "answer": "x = 7"
+  },
+  {
+    "id": 20,
+    "title": "Solve Linear Equation: 11x + 22 = 110",
+    "acceptance": "90.8%",
+    "difficulty": "Easy",
+    "solved": false,
+    "likes": "0",
+    "dislikes": "0",
+    "online": 0,
+    "tags": ["Algebra", "Math"],
+    "companies": [],
+    "description": [
+      {
+        "parts": [
+          { "text": "Find the value of x in " },
+          { "text": "11x + 22 = 110", "code": true },
+          { "text": "." }
+        ]
+      }
+    ],
+    "examples": [
+      {
+        "id": 1,
+        "input": "11x + 22 = 110",
+        "output": "x = 8",
+        "explanation": "Subtract 22 from both sides: 11x = 88 → divide by 11."
+      }
+    ],
+    "constraints": ["One variable only", "Linear equation", "Integer solution"],
+    "answer": "x = 8"
+  }
+]
