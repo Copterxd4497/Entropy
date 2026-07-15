@@ -60,7 +60,17 @@ export default function MathText({
 
     return (
       <span
-        style={{ display: asBlock ? "block" : "inline-block" }}
+        style={{
+          display: asBlock ? "block" : "inline-block",
+          fontSize: asBlock ? "1.35rem" : "1.2rem",
+          lineHeight: 1.45,
+          whiteSpace: "normal",
+          maxWidth: "100%",
+          overflowX: "auto",
+          overflowY: "hidden",
+          verticalAlign: "middle",
+          padding: asBlock ? "0.2rem 0" : "0.1rem 0",
+        }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );
