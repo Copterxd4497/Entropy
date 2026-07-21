@@ -30,7 +30,9 @@ export const getScratchProblems = async (req, res) => {
 
 export const getScratchProblemTopics = async (req, res) => {
   try {
-    const scratchProblemTopics = await ScratchProblemTopics.find();
+    const scratchProblemTopics = await ScratchProblemTopics.find().populate(
+      "scratchProblem",
+    );
     res.json(scratchProblemTopics);
   } catch (error) {
     res.status(500).json({ message: error.message });

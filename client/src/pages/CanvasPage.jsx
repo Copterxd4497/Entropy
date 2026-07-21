@@ -24,7 +24,11 @@ export default function Canvas_Problem() {
   const handleSubmit = async (input) => {
     // Get expected answer from first test case
     const expectedAnswer =
-      problem?.examples?.[0]?.output || problem?.testCases?.[0]?.expected || "";
+      problem?.correctChoice ||
+      problem?.answer ||
+      problem?.examples?.[0]?.output ||
+      problem?.testCases?.[0]?.expected ||
+      "";
 
     // Convert both to strings and normalize by removing whitespace
     const userAnswer = String(input).trim();

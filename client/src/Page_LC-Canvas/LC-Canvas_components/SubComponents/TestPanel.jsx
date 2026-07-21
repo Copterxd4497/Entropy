@@ -17,7 +17,19 @@ function ManualInputTab({ results, onSubmit, isRunning, isSolved, problem }) {
     "Option 3",
   ].filter((choice, index, arr) => choice && arr.indexOf(choice) === index);
 
-  const choices = explicitChoices.length ? explicitChoices : generatedChoices;
+  const choices = (explicitChoices.length ? explicitChoices : generatedChoices)
+    .map((choice, index) => {
+      if (typeof choice === "object" && choice !== null) {
+        return {
+          key: choice.id ?? index,
+          value: choice.id ?? choice.text,
+          label: choice.text ?? choice.id,
+        };
+      }
+
+      return { key: index, value: choice, label: choice };
+    })
+    .filter((choice) => choice.value && choice.label);
 
   return (
     <div style={{ padding: "10px" }}>
@@ -29,9 +41,9 @@ function ManualInputTab({ results, onSubmit, isRunning, isSolved, problem }) {
           marginBottom: "12px",
         }}
       >
-        {choices.map((choice, index) => (
+        {choices.map((choice) => (
           <label
-            key={`${choice}-${index}`}
+            key={choice.key}
             style={{
               display: "flex",
               alignItems: "center",
@@ -48,12 +60,12 @@ function ManualInputTab({ results, onSubmit, isRunning, isSolved, problem }) {
             <input
               type="radio"
               name="scratch-choice"
-              value={choice}
-              checked={selectedChoice === choice}
+              value={choice.value}
+              checked={selectedChoice === choice.value}
               onChange={(e) => setSelectedChoice(e.target.value)}
               disabled={isRunning}
             />
-            <span>{choice}</span>
+            <span>{choice.label}</span>
           </label>
         ))}
       </div>

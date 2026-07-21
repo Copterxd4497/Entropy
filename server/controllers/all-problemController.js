@@ -22,7 +22,9 @@ export const all_problems = async (req, res) => {
 export const all_problemTopics = async (req, res) => {
   try {
     const problemTopics = await ProblemTopics.find();
-    const scratchTopics = await ScratchProblemTopics.find();
+    const scratchTopics = await ScratchProblemTopics.find().populate(
+      "scratchProblem",
+    );
 
     res.json([
       ...problemTopics.map((topic) => ({
