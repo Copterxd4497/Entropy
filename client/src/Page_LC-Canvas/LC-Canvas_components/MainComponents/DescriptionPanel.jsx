@@ -33,11 +33,26 @@ function RichPara({ parts }) {
   return (
     <p>
       {parts.map((part, i) => {
-        let content = <span key={i}>{part.text}</span>;
+        let content = (
+          <span key={i}>
+            <MathText>{part.text}</MathText>
+          </span>
+        );
 
+        if (part.math) return content;
         if (part.code) content = <code key={i}>{part.text}</code>;
-        if (part.bold) content = <strong key={i}>{part.text}</strong>;
-        if (part.italic) content = <em key={i}>{part.text}</em>;
+        if (part.bold)
+          content = (
+            <strong key={i}>
+              <MathText>{part.text}</MathText>
+            </strong>
+          );
+        if (part.italic)
+          content = (
+            <em key={i}>
+              <MathText>{part.text}</MathText>
+            </em>
+          );
 
         return content;
       })}
@@ -50,13 +65,13 @@ function Example({ ex }) {
   return (
     <div className="desc__example">
       <pre>
-        <strong>Input:</strong> {ex.input}
+        <strong>Input:</strong> <MathText>{ex.input}</MathText>
         {"\n"}
-        <strong>Output:</strong> {ex.output}
+        <strong>Output:</strong> <MathText>{ex.output}</MathText>
         {ex.explanation && (
           <>
             {"\n"}
-            <strong>Explanation:</strong> {ex.explanation}
+            <strong>Explanation:</strong> <MathText>{ex.explanation}</MathText>
           </>
         )}
       </pre>
@@ -160,7 +175,9 @@ function DescriptionContent({ problem }) {
         {problem.constraints?.map((c, i) => (
           <div key={i} className="desc__constraint">
             <span className="desc__constraint-dot">•</span>
-            <span className="desc__constraint-text">{c}</span>
+            <span className="desc__constraint-text">
+              <MathText>{c}</MathText>
+            </span>
           </div>
         ))}
       </div>

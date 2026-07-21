@@ -55,17 +55,17 @@ function Example({ ex }) {
       <pre>
         <strong>Input:</strong>
         {"  "}
-        {ex.input}
+        <MathText>{ex.input}</MathText>
         {"\n"}
         <strong>Output:</strong>
         {"  "}
-        {ex.output}
+        <MathText>{ex.output}</MathText>
         {ex.explanation && (
           <>
             {"\n"}
             <strong>Explanation:</strong>
             {"  "}
-            {ex.explanation}
+            <MathText>{ex.explanation}</MathText>
           </>
         )}
       </pre>
@@ -159,7 +159,9 @@ function DescriptionContent({ problem }) {
         {problem.constraints?.map((c, i) => (
           <div key={i} className="desc__constraint">
             <span className="desc__constraint-dot">•</span>
-            <span className="desc__constraint-text">{c}</span>
+            <span className="desc__constraint-text">
+              <MathText>{c}</MathText>
+            </span>
           </div>
         ))}
       </div>

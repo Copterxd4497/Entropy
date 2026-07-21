@@ -14,7 +14,7 @@
       {
         "parts": [
           { "text": "Solve the linear equation " },
-          { "text": "5x + 10 = 35", "code": true },
+          { "text": "$5x + 10 = 35$", "math": true },
           { "text": " and find the value of x." }
         ]
       },
@@ -48,7 +48,7 @@
       {
         "parts": [
           { "text": "Solve the equation " },
-          { "text": "8x - 16 = 48", "code": true },
+          { "text": "$8x - 16 = 48$", "math": true },
           { "text": "." }
         ]
       },
@@ -82,7 +82,7 @@
       {
         "parts": [
           { "text": "Find x in the equation " },
-          { "text": "3x + 9 = 24", "code": true },
+          { "text": "$3x + 9 = 24$", "math": true },
           { "text": "." }
         ]
       }
@@ -113,7 +113,7 @@
       {
         "parts": [
           { "text": "Solve " },
-          { "text": "9x + 18 = 99", "code": true },
+          { "text": "$9x + 18 = 99$", "math": true },
           { "text": " for x." }
         ]
       }
@@ -144,7 +144,7 @@
       {
         "parts": [
           { "text": "Determine the value of x in " },
-          { "text": "6x - 12 = 24", "code": true },
+          { "text": "$6x - 12 = 24$", "math": true },
           { "text": "." }
         ]
       }
@@ -175,7 +175,7 @@
       {
         "parts": [
           { "text": "Solve the equation " },
-          { "text": "4x + 20 = 52", "code": true },
+          { "text": "$4x + 20 = 52$", "math": true },
           { "text": "." }
         ]
       }
@@ -206,7 +206,7 @@
       {
         "parts": [
           { "text": "Find the solution to " },
-          { "text": "12x - 36 = 60", "code": true },
+          { "text": "$12x - 36 = 60$", "math": true },
           { "text": "." }
         ]
       }
@@ -237,7 +237,7 @@
       {
         "parts": [
           { "text": "Solve for x: " },
-          { "text": "2x + 14 = 30", "code": true }
+          { "text": "$2x + 14 = 30$", "math": true }
         ]
       }
     ],
@@ -267,7 +267,7 @@
       {
         "parts": [
           { "text": "Solve the equation " },
-          { "text": "10x - 50 = 20", "code": true },
+          { "text": "$10x - 50 = 20$", "math": true },
           { "text": "." }
         ]
       }
@@ -298,7 +298,7 @@
       {
         "parts": [
           { "text": "Find the value of x in " },
-          { "text": "11x + 22 = 110", "code": true },
+          { "text": "$11x + 22 = 110$", "math": true },
           { "text": "." }
         ]
       }

@@ -39,6 +39,78 @@ function looksLikeLatex(text) {
   );
 }
 
+function unwrapMathDelimiters(text) {
+  const trimmed = text.trim();
+
+  if (trimmed.startsWith("$$") && trimmed.endsWith("$$")) {
+    return { text: trimmed.slice(2, -2).trim(), displayMode: true };
+  }
+
+  if (trimmed.startsWith("\\[") && trimmed.endsWith("\\]")) {
+    return { text: trimmed.slice(2, -2).trim(), displayMode: true };
+  }
+
+  if (trimmed.startsWith("$") && trimmed.endsWith("$")) {
+    return { text: trimmed.slice(1, -1).trim(), displayMode: false };
+  }
+
+  if (trimmed.startsWith("\\(") && trimmed.endsWith("\\)")) {
+    return { text: trimmed.slice(2, -2).trim(), displayMode: false };
+  }
+
+  return { text: trimmed, displayMode: false };
+}
+
+function renderKatex(text, asBlock, key) {
+  const { text: unwrappedText, displayMode } = unwrapMathDelimiters(text);
+  const html = katex.renderToString(unwrappedText, {
+    throwOnError: false,
+    displayMode: asBlock || displayMode,
+    output: "html",
+  });
+
+  return (
+    <span
+      key={key}
+      style={{
+        display: asBlock || displayMode ? "block" : "inline-block",
+        fontSize: asBlock || displayMode ? "1.35rem" : "1.2rem",
+        lineHeight: 1.45,
+        whiteSpace: "normal",
+        maxWidth: "100%",
+        overflowX: "auto",
+        overflowY: "hidden",
+        verticalAlign: "middle",
+        padding: asBlock || displayMode ? "0.2rem 0" : "0.1rem 0",
+      }}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
+}
+
+function renderInlineMath(text) {
+  const normalized = text.replace(/\\\\/g, "\\");
+  const delimiterPattern = /\\\[([\s\S]*?)\\\]|\\\(([\s\S]*?)\\\)|\$\$([\s\S]*?)\$\$|\$([^$]+?)\$/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = delimiterPattern.exec(normalized))) {
+    if (match.index > lastIndex) {
+      parts.push(normalized.slice(lastIndex, match.index));
+    }
+
+    const isDisplay = Boolean(match[1] ?? match[3]);
+    const latex = match[1] ?? match[2] ?? match[3] ?? match[4];
+    parts.push(renderKatex(latex, isDisplay, `math-${match.index}`));
+    lastIndex = delimiterPattern.lastIndex;
+  }
+
+  if (lastIndex === 0) return null;
+  if (lastIndex < normalized.length) parts.push(normalized.slice(lastIndex));
+  return parts;
+}
+
 export default function MathText({
   children,
   asBlock = false,
@@ -51,29 +123,10 @@ export default function MathText({
   }
 
   try {
-    const normalized = text.replace(/\\\\/g, "\\");
-    const html = katex.renderToString(normalized, {
-      throwOnError: false,
-      displayMode: asBlock,
-      output: "html",
-    });
+    const inlineMath = renderInlineMath(text);
+    if (inlineMath) return <>{inlineMath}</>;
 
-    return (
-      <span
-        style={{
-          display: asBlock ? "block" : "inline-block",
-          fontSize: asBlock ? "1.35rem" : "1.2rem",
-          lineHeight: 1.45,
-          whiteSpace: "normal",
-          maxWidth: "100%",
-          overflowX: "auto",
-          overflowY: "hidden",
-          verticalAlign: "middle",
-          padding: asBlock ? "0.2rem 0" : "0.1rem 0",
-        }}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    );
+    return renderKatex(text.replace(/\\\\/g, "\\"), asBlock, "math");
   } catch {
     return <>{text}</>;
   }
