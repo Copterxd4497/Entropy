@@ -563,6 +563,8 @@ button {
 
 /* ── Bottom test panel ── */
 .bottom-panel {
+  height: 220px;
+  margin-top: 32px;
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--border);

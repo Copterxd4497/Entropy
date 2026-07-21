@@ -32,13 +32,17 @@ function RichPara({ parts }) {
   return (
     <p>
       {parts.map((part, i) => {
-        let el = part.text;
-        if (part.bold) el = <strong key={i}>{el}</strong>;
-        if (part.italic) el = <em key={i}>{el}</em>;
-        if (part.code) el = <code key={i}>{el}</code>;
-        // wrap non-element strings
-        if (typeof el === "string") el = <span key={i}>{el}</span>;
-        return el;
+        let content = part.text;
+
+        if (typeof content === "string") {
+          content = <MathText>{content}</MathText>;
+        }
+
+        if (part.bold) return <strong key={i}>{content}</strong>;
+        if (part.italic) return <em key={i}>{content}</em>;
+        if (part.code) return <code key={i}>{content}</code>;
+
+        return <span key={i}>{content}</span>;
       })}
     </p>
   );

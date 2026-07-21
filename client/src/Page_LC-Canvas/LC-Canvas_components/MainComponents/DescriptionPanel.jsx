@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useProblemContext } from "../../../Page_LC-Problem/context/ProblemContext";
 import MathText from "../../../components/SubComponents/MathText";
+import TestPanel from "../SubComponents/TestPanel";
 
 /* ── Tabs ── */
 const TABS = [
@@ -173,7 +174,7 @@ function Placeholder({ label }) {
 }
 
 /* ── Main panel ── */
-export default function DescriptionPanel() {
+export default function DescriptionPanel({ results, onSubmit, isRunning }) {
   const [activeTab, setActiveTab] = useState("description");
   const { problem } = useProblemContext();
 
@@ -181,7 +182,29 @@ export default function DescriptionPanel() {
     <div className="left-panel">
       <TabBar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {activeTab === "description" && <DescriptionContent problem={problem} />}
+      {activeTab === "description" && (
+        <>
+          <DescriptionContent problem={problem} />
+          <div
+            style={{
+              marginTop: "auto",
+              borderTop: "1px solid var(--border, #2a2a2a)",
+              paddingTop: "12px",
+              flexShrink: 0,
+              position: "sticky",
+              bottom: 0,
+              background: "var(--bg-panel)",
+              zIndex: 1,
+            }}
+          >
+            <TestPanel
+              results={results}
+              onSubmit={onSubmit}
+              isRunning={isRunning}
+            />
+          </div>
+        </>
+      )}
       {activeTab === "editorial" && <Placeholder label="Editorial" />}
       {activeTab === "solutions" && <Placeholder label="Solutions" />}
       {activeTab === "submissions" && <Placeholder label="Submissions" />}

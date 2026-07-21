@@ -112,18 +112,18 @@ export default function Canvas_Problem() {
               overflow: "hidden",
             }}
           >
-            <DescriptionPanel />
+            <DescriptionPanel
+              results={results}
+              onSubmit={handleSubmit}
+              isRunning={isRunning}
+            />
           </div>
 
           {/* Horizontal drag divider */}
           <div className="divider-h" onMouseDown={onDividerMouseDown} />
 
           {/* Right: canvas scratchpad + tests */}
-          <RightPanel
-            results={results}
-            onSubmit={handleSubmit}
-            isRunning={isRunning}
-          />
+          <RightPanel />
         </div>
       </div>
     </ProblemProvider>

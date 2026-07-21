@@ -367,7 +367,7 @@ textarea {
 .description {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 24px 80px;
+  padding: 24px 24px 96px;
 }
 
 .desc__title-row {
@@ -613,6 +613,7 @@ textarea {
 /* ── Bottom split (test / result) ── */
 .bottom-panel {
   height: 220px;
+  margin-top: 32px;
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--border);
@@ -685,7 +686,7 @@ textarea {
 .bottom-content {
   flex: 1;
   overflow-y: auto;
-  padding: 14px 16px 12px;
+  padding: 10px 16px 12px;
 }
 
 .panel-section-title {

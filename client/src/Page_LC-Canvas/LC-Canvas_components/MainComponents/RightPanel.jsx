@@ -1,13 +1,11 @@
 import ScratchCanvas from "../SubComponents/ScratchCanvas";
-import TestPanel from "../SubComponents/TestPanel";
 import { useResizableV } from "../../hooks/useResizable";
 
-export default function RightPanel({ results, onSubmit, isRunning }) {
-  const [editorPct, onDividerMouseDown] = useResizableV(65, 30, 88);
+export default function RightPanel() {
+  const [editorPct, onDividerMouseDown] = useResizableV(100, 100, 100);
 
   return (
     <div className="right-panel">
-      {/* Canvas section */}
       <div
         style={{
           height: `${editorPct}%`,
@@ -17,25 +15,6 @@ export default function RightPanel({ results, onSubmit, isRunning }) {
         }}
       >
         <ScratchCanvas />
-      </div>
-
-      {/* Vertical drag divider */}
-      <div className="divider-v" onMouseDown={onDividerMouseDown} />
-
-      {/* Test panel */}
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-        }}
-      >
-        <TestPanel
-          results={results}
-          onSubmit={onSubmit}
-          isRunning={isRunning}
-        />
       </div>
     </div>
   );
