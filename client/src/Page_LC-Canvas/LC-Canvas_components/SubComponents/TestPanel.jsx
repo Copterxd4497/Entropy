@@ -1,44 +1,74 @@
 import { useState } from "react";
 import { useProblemContext } from "../../../Page_LC-Problem/context/ProblemContext";
 
-function ManualInputTab({ results, onSubmit, isRunning, isSolved }) {
-  const [input, setInput] = useState("");
+function ManualInputTab({ results, onSubmit, isRunning, isSolved, problem }) {
+  const [selectedChoice, setSelectedChoice] = useState("");
+
+  const explicitChoices = Array.isArray(problem?.choices)
+    ? problem.choices
+    : Array.isArray(problem?.options)
+      ? problem.options
+      : [];
+
+  const generatedChoices = [
+    problem?.answer,
+    problem?.examples?.[0]?.output,
+    "Option 2",
+    "Option 3",
+  ].filter((choice, index, arr) => choice && arr.indexOf(choice) === index);
+
+  const choices = explicitChoices.length ? explicitChoices : generatedChoices;
 
   return (
     <div style={{ padding: "10px" }}>
-      <div className="tc-label">Enter Answer</div>
-      <textarea
-        className="tc-input"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Enter your answer here..."
-        rows={4}
-        disabled={isRunning}
+      <div className="tc-label">Select Choice</div>
+      <div
         style={{
-          width: "100%",
-          padding: "8px",
-          marginBottom: "10px",
-          fontFamily: "var(--f-mono, monospace)",
-          fontSize: 12,
-          color: isRunning ? "#999" : "var(--tx-1, #eff2f6cc)",
-          borderRadius: "4px",
-          background: isRunning ? "#2a2a2a" : "var(--bg-raised, #1e1e1e)",
-          border: "1px solid var(--border, #2a2a2a)",
-          cursor: isRunning ? "not-allowed" : "text",
+          display: "grid",
+          gap: "8px",
+          marginBottom: "12px",
         }}
-      />
+      >
+        {choices.map((choice, index) => (
+          <label
+            key={`${choice}-${index}`}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "8px 10px",
+              borderRadius: "4px",
+              background: "var(--bg-raised, #1e1e1e)",
+              border: "1px solid var(--border, #2a2a2a)",
+              color: "var(--tx-1, #eff2f6cc)",
+              cursor: isRunning ? "not-allowed" : "pointer",
+              opacity: isRunning ? 0.8 : 1,
+            }}
+          >
+            <input
+              type="radio"
+              name="scratch-choice"
+              value={choice}
+              checked={selectedChoice === choice}
+              onChange={(e) => setSelectedChoice(e.target.value)}
+              disabled={isRunning}
+            />
+            <span>{choice}</span>
+          </label>
+        ))}
+      </div>
       <button
-        onClick={() => onSubmit(input)}
-        disabled={isRunning}
+        onClick={() => onSubmit(selectedChoice)}
+        disabled={isRunning || !selectedChoice}
         style={{
           padding: "8px 16px",
           background: isSolved ? "#00b8a3" : "var(--accent, #ffc01e)",
           color: isSolved ? "#fff" : "#000",
           border: "none",
           borderRadius: "4px",
-          cursor: isRunning ? "not-allowed" : "pointer",
+          cursor: isRunning || !selectedChoice ? "not-allowed" : "pointer",
           fontWeight: "600",
-          opacity: isRunning ? 0.8 : 1,
+          opacity: isRunning || !selectedChoice ? 0.8 : 1,
         }}
       >
         {isRunning ? "Submitting..." : isSolved ? "✓ Submit Again" : "Submit"}
@@ -143,6 +173,7 @@ export default function TestPanel({ results, onSubmit, isRunning }) {
             onSubmit={onSubmit}
             isRunning={isRunning}
             isSolved={isSolved}
+            problem={problem}
           />
         )}
         {active === "output" && (
