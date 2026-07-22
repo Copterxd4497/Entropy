@@ -45,29 +45,32 @@ export default function Canvas_Problem() {
       isSolved: isSolved,
     });
 
+    if (!isSolved) {
+      window.alert("Incorrect choice. Please try again.");
+      return;
+    }
+
     // Update problem context immediately
-    if (isSolved && setProblem) {
+    if (setProblem) {
       setProblem((prev) =>
         prev ? { ...prev, solved: true, status: "solved" } : prev,
       );
     }
 
     // Send API request in background
-    if (isSolved) {
-      const statusBasePath = "/api/scratchProblems";
-      try {
-        await apiFetch(`${statusBasePath}/${id}/status`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            status: "solved",
-          }),
-        });
-      } catch (err) {
-        console.error("Failed to update status:", err);
-      }
+    const statusBasePath = "/api/scratchProblems";
+    try {
+      await apiFetch(`${statusBasePath}/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: "solved",
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to update status:", err);
     }
   };
 

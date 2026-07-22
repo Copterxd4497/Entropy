@@ -5,13 +5,13 @@ import {
   useCallback,
   useLayoutEffect,
 } from "react";
-import { TOOLS, COLORS, STROKE_WIDTHS, evalMath } from "../utils/canvasTools";
+import { TOOLS, COLORS, STROKE_WIDTHS } from "../utils/canvasTools";
 import "../../../styles/LC-Canvas_styles/scratchCanvas.css";
 
 /* ──────────────────────────────────────────────
    Tiny sub-components
 ────────────────────────────────────────────── */
-function ToolPalette({ active, setActive }) {
+function ToolPalette({ active, setActive, zoom, onZoomIn, onZoomOut, onReset }) {
   return (
     <div className="tool-palette">
       {TOOLS.map((t) => (
@@ -25,12 +25,25 @@ function ToolPalette({ active, setActive }) {
           <span className="tool-btn__tip">{t.label}</span>
         </button>
       ))}
+      <div className="tool-palette__divider" />
+      <button className="tool-btn" onClick={onZoomIn} title="Zoom in">
+        ＋
+        <span className="tool-btn__tip">Zoom in</span>
+      </button>
+      <button className="tool-btn" onClick={onZoomOut} title="Zoom out">
+        −
+        <span className="tool-btn__tip">Zoom out</span>
+      </button>
+      <button className="tool-btn tool-btn--zoom" onClick={onReset} title="Reset zoom">
+        {Math.round(zoom * 100)}%
+        <span className="tool-btn__tip">Reset zoom</span>
+      </button>
     </div>
   );
 }
 
 function OptionsBar({ color, setColor, strokeWidth, setStrokeWidth, tool }) {
-  const showStroke = !["select", "eraser", "text"].includes(tool);
+  const showStroke = tool === "pen";
   return (
     <div className="options-bar">
       {COLORS.map((c) => (
@@ -90,8 +103,6 @@ function ActionButtons({ onUndo, onRedo, onClear }) {
 /* ──────────────────────────────────────────────
    Canvas rendering helpers
 ────────────────────────────────────────────── */
-const FONT = "14px 'DM Mono', monospace";
-
 function drawGrid(ctx, w, h, offset) {
   const step = 28;
   ctx.strokeStyle = "rgba(255,255,255,0.035)";
@@ -230,63 +241,6 @@ function drawAll(ctx, elements, previewEl) {
 }
 
 /* ──────────────────────────────────────────────
-   Text editing overlay
-────────────────────────────────────────────── */
-function TextOverlay({ x, y, onCommit, color, fontSize = 15 }) {
-  const [val, setVal] = useState("");
-  const taRef = useRef(null);
-
-  useEffect(() => {
-    taRef.current?.focus();
-  }, []);
-
-  const commit = useCallback(() => {
-    if (val.trim()) onCommit(val);
-    else onCommit(null);
-  }, [val, onCommit]);
-
-  const handleKey = (e) => {
-    if (e.key === "Escape") {
-      onCommit(null);
-      return;
-    }
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      commit();
-    }
-  };
-
-  return (
-    <textarea
-      ref={taRef}
-      value={val}
-      onChange={(e) => setVal(e.target.value)}
-      onBlur={commit}
-      onKeyDown={handleKey}
-      style={{
-        position: "absolute",
-        left: x,
-        top: y,
-        minWidth: 120,
-        minHeight: 36,
-        background: "rgba(24,27,34,0.92)",
-        border: "1.5px solid var(--accent-ring, #ffa116)",
-        borderRadius: 4,
-        color: color || "#eceef2",
-        fontFamily: "'DM Mono', monospace",
-        fontSize: fontSize,
-        lineHeight: 1.5,
-        padding: "4px 8px",
-        resize: "none",
-        outline: "none",
-        zIndex: 30,
-        caretColor: "#ffa116",
-      }}
-    />
-  );
-}
-
-/* ──────────────────────────────────────────────
    Main ScratchCanvas
 ────────────────────────────────────────────── */
 export default function ScratchCanvas() {
@@ -303,22 +257,16 @@ export default function ScratchCanvas() {
 
   // Active drawing state
   const drawing = useRef(false);
+  const panning = useRef(false);
+  const panStart = useRef({ x: 0, y: 0 });
   const startPt = useRef({ x: 0, y: 0 });
   const curPts = useRef([]);
 
   // Preview element (while drawing)
   const [preview, setPreview] = useState(null);
 
-  // Canvas pan offset
+  const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const panning = useRef(false);
-  const panStart = useRef({ x: 0, y: 0, ox: 0, oy: 0 });
-
-  // Text input overlay
-  const [textInput, setTextInput] = useState(null); // { x, y }
-
-  // Node counter
-  const nodeLabel = useRef(0);
 
   /* Size canvas to wrapper */
   useLayoutEffect(() => {
@@ -342,45 +290,73 @@ export default function ScratchCanvas() {
     if (!cv) return;
     const ctx = cv.getContext("2d");
     ctx.clearRect(0, 0, cv.width, cv.height);
-    drawGrid(ctx, cv.width, cv.height, offset);
     ctx.save();
+    ctx.translate(offset.x, offset.y);
+    ctx.scale(zoom, zoom);
+    drawGrid(ctx, cv.width / zoom, cv.height / zoom, { x: 0, y: 0 });
     drawAll(ctx, elements, preview);
     ctx.restore();
-  }, [elements, preview, offset]);
+  }, [elements, preview, offset, zoom]);
 
   useEffect(() => {
     repaint();
   }, [repaint]);
 
   /* Coordinate helpers */
-  const toCanvas = (e) => {
+  const toCanvas = useCallback((e) => {
     const r = canvasRef.current.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
-  };
+    return {
+      x: (e.clientX - r.left - offset.x) / zoom,
+      y: (e.clientY - r.top - offset.y) / zoom,
+    };
+  }, [offset, zoom]);
+
+  const setZoomAt = useCallback(
+    (nextZoom, point) => {
+      const clampedZoom = Math.min(3, Math.max(0.5, nextZoom));
+      setOffset((previousOffset) => ({
+        x: point.x - (point.x - previousOffset.x) * (clampedZoom / zoom),
+        y: point.y - (point.y - previousOffset.y) * (clampedZoom / zoom),
+      }));
+      setZoom(clampedZoom);
+    },
+    [zoom],
+  );
+
+  const onWheel = useCallback(
+    (e) => {
+      // Navigation is intentionally tied to Select so the drawing tools stay
+      // focused on drawing instead of unexpectedly moving the canvas.
+      if (tool !== "select") return;
+      e.preventDefault();
+      const rect = canvasRef.current.getBoundingClientRect();
+      const point = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+
+      if (e.ctrlKey || e.metaKey) {
+        setZoomAt(zoom * (e.deltaY < 0 ? 1.1 : 0.9), point);
+        return;
+      }
+
+      setOffset((previousOffset) => ({
+        x: previousOffset.x - e.deltaX,
+        y: previousOffset.y - e.deltaY,
+      }));
+    },
+    [setZoomAt, tool, zoom],
+  );
 
   /* ── Pointer events ── */
   const onPointerDown = useCallback(
     (e) => {
-      if (textInput) return;
-      const pt = toCanvas(e);
       canvasRef.current.setPointerCapture(e.pointerId);
 
-      // Middle mouse / space+drag → pan
-      if (e.button === 1 || (e.button === 0 && tool === "select")) {
+      if (tool === "select") {
         panning.current = true;
-        panStart.current = {
-          x: e.clientX,
-          y: e.clientY,
-          ox: offset.x,
-          oy: offset.y,
-        };
+        panStart.current = { x: e.clientX, y: e.clientY };
         return;
       }
 
-      if (tool === "text") {
-        setTextInput(pt);
-        return;
-      }
+      const pt = toCanvas(e);
 
       if (tool === "eraser") {
         eraseAt(pt);
@@ -393,24 +369,24 @@ export default function ScratchCanvas() {
       startPt.current = pt;
       curPts.current = [pt];
     },
-    [tool, offset, textInput],
+    [tool, toCanvas],
   );
 
   const onPointerMove = useCallback(
     (e) => {
-      const pt = toCanvas(e);
-
-      if (panning.current) {
-        setOffset({
-          x: panStart.current.ox + (e.clientX - panStart.current.x),
-          y: panStart.current.oy + (e.clientY - panStart.current.y),
-        });
+      if (tool === "select" && panning.current) {
+        const deltaX = e.clientX - panStart.current.x;
+        const deltaY = e.clientY - panStart.current.y;
+        panStart.current = { x: e.clientX, y: e.clientY };
+        setOffset((previousOffset) => ({
+          x: previousOffset.x + deltaX,
+          y: previousOffset.y + deltaY,
+        }));
         return;
       }
 
       if (!drawing.current) return;
-      const s = startPt.current;
-
+      const pt = toCanvas(e);
       if (tool === "eraser") {
         eraseAt(pt);
         return;
@@ -425,126 +401,24 @@ export default function ScratchCanvas() {
         });
         return;
       }
-      if (tool === "line") {
-        setPreview({
-          type: "line",
-          x1: s.x,
-          y1: s.y,
-          x2: pt.x,
-          y2: pt.y,
-          color,
-          sw: strokeWidth,
-        });
-        return;
-      }
-      if (tool === "arrow") {
-        setPreview({
-          type: "arrow",
-          x1: s.x,
-          y1: s.y,
-          x2: pt.x,
-          y2: pt.y,
-          color,
-          sw: strokeWidth,
-        });
-        return;
-      }
-      if (tool === "rect") {
-        setPreview({
-          type: "rect",
-          x: Math.min(s.x, pt.x),
-          y: Math.min(s.y, pt.y),
-          w: Math.abs(pt.x - s.x),
-          h: Math.abs(pt.y - s.y),
-          color,
-          sw: strokeWidth,
-        });
-        return;
-      }
-      if (tool === "ellipse") {
-        setPreview({
-          type: "ellipse",
-          x: Math.min(s.x, pt.x),
-          y: Math.min(s.y, pt.y),
-          w: pt.x - s.x,
-          h: pt.y - s.y,
-          color,
-          sw: strokeWidth,
-        });
-        return;
-      }
     },
-    [tool, color, strokeWidth],
+    [tool, color, strokeWidth, toCanvas],
   );
 
   const onPointerUp = useCallback(
-    (e) => {
-      panning.current = false;
+    () => {
+      if (panning.current) {
+        panning.current = false;
+        return;
+      }
       if (!drawing.current) return;
       drawing.current = false;
-
-      const pt = toCanvas(e);
-      const s = startPt.current;
 
       let newEl = null;
       if (tool === "pen")
         newEl = {
           type: "pen",
           pts: [...curPts.current],
-          color,
-          sw: strokeWidth,
-          id: Date.now(),
-        };
-      if (tool === "line")
-        newEl = {
-          type: "line",
-          x1: s.x,
-          y1: s.y,
-          x2: pt.x,
-          y2: pt.y,
-          color,
-          sw: strokeWidth,
-          id: Date.now(),
-        };
-      if (tool === "arrow")
-        newEl = {
-          type: "arrow",
-          x1: s.x,
-          y1: s.y,
-          x2: pt.x,
-          y2: pt.y,
-          color,
-          sw: strokeWidth,
-          id: Date.now(),
-        };
-      if (tool === "rect")
-        newEl = {
-          type: "rect",
-          x: Math.min(s.x, pt.x),
-          y: Math.min(s.y, pt.y),
-          w: Math.abs(pt.x - s.x),
-          h: Math.abs(pt.y - s.y),
-          color,
-          sw: strokeWidth,
-          id: Date.now(),
-        };
-      if (tool === "ellipse")
-        newEl = {
-          type: "ellipse",
-          x: Math.min(s.x, pt.x),
-          y: Math.min(s.y, pt.y),
-          w: pt.x - s.x,
-          h: pt.y - s.y,
-          color,
-          sw: strokeWidth,
-          id: Date.now(),
-        };
-      if (tool === "node")
-        newEl = {
-          type: "node",
-          cx: pt.x,
-          cy: pt.y,
-          label: String(++nodeLabel.current),
           color,
           sw: strokeWidth,
           id: Date.now(),
@@ -572,33 +446,6 @@ export default function ScratchCanvas() {
     );
   };
 
-  /* Text commit */
-  const commitText = useCallback(
-    (val) => {
-      setTextInput(null);
-      if (!val) return;
-      const lines = val.split("\n");
-      // Try math on each line
-      const mathResult = evalMath(
-        lines[lines.length - 1].replace(/=\s*$/, "").trim(),
-      );
-      const newEl = {
-        type: "text",
-        x: textInput.x,
-        y: textInput.y,
-        text: val,
-        lines,
-        color,
-        fontSize: 14,
-        mathResult,
-        id: Date.now(),
-      };
-      setUndoStack((u) => [...u, elements]);
-      setElements((prev) => [...prev, newEl]);
-    },
-    [textInput, color, elements],
-  );
-
   /* Undo / Redo / Clear */
   const undo = () => {
     if (!undoStack.length) return;
@@ -614,38 +461,20 @@ export default function ScratchCanvas() {
   /* Keyboard shortcuts */
   useEffect(() => {
     const handler = (e) => {
-      if (e.target.tagName === "TEXTAREA") return;
       if ((e.ctrlKey || e.metaKey) && e.key === "z") {
         e.preventDefault();
         undo();
       }
-      if (e.key === "v") setTool("select");
       if (e.key === "p") setTool("pen");
-      if (e.key === "l") setTool("line");
-      if (e.key === "r") setTool("rect");
-      if (e.key === "e") setTool("ellipse");
-      if (e.key === "a") setTool("arrow");
-      if (e.key === "t") setTool("text");
-      if (e.key === "n") setTool("node");
       if (e.key === "x") setTool("eraser");
+      if (e.key === "v") setTool("select");
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   });
 
   /* Cursor style */
-  const cursor =
-    tool === "pen"
-      ? "crosshair"
-      : tool === "eraser"
-        ? "cell"
-        : tool === "text"
-          ? "text"
-          : tool === "select"
-            ? "grab"
-            : tool === "node"
-              ? "copy"
-              : "crosshair";
+  const cursor = tool === "select" ? "grab" : tool === "eraser" ? "cell" : "crosshair";
 
   return (
     <>
@@ -656,7 +485,7 @@ export default function ScratchCanvas() {
           <span>Scratchpad</span>
         </div>
         <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-          <span className="canvas-header__badge">Visual Calculator</span>
+          <span className="canvas-header__badge">Touch drawing enabled</span>
           <span
             style={{
               fontSize: 11,
@@ -668,39 +497,6 @@ export default function ScratchCanvas() {
           </span>
         </div>
         <div className="canvas-header__spacer" />
-        <div
-          style={{
-            display: "flex",
-            gap: 4,
-            alignItems: "center",
-            fontSize: 11,
-            color: "var(--tx-3)",
-          }}
-        >
-          <span>Tip:</span>
-          <code
-            style={{
-              background: "var(--bg-surface)",
-              padding: "1px 6px",
-              borderRadius: 3,
-              fontFamily: "var(--f-mono)",
-            }}
-          >
-            T
-          </code>
-          <span>for text &amp; math eval</span>
-          <code
-            style={{
-              background: "var(--bg-surface)",
-              padding: "1px 6px",
-              borderRadius: 3,
-              fontFamily: "var(--f-mono)",
-            }}
-          >
-            N
-          </code>
-          <span>for nodes</span>
-        </div>
       </div>
 
       {/* Canvas area */}
@@ -710,9 +506,21 @@ export default function ScratchCanvas() {
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+          onWheel={onWheel}
         />
 
-        <ToolPalette active={tool} setActive={setTool} />
+        <ToolPalette
+          active={tool}
+          setActive={setTool}
+          zoom={zoom}
+          onZoomIn={() => setZoomAt(zoom + 0.25, { x: 0, y: 0 })}
+          onZoomOut={() => setZoomAt(zoom - 0.25, { x: 0, y: 0 })}
+          onReset={() => {
+            setZoom(1);
+            setOffset({ x: 0, y: 0 });
+          }}
+        />
         <OptionsBar
           color={color}
           setColor={setColor}
@@ -721,16 +529,6 @@ export default function ScratchCanvas() {
           tool={tool}
         />
         <ActionButtons onUndo={undo} onRedo={redo} onClear={clear} />
-
-        {/* Text input overlay */}
-        {textInput && (
-          <TextOverlay
-            x={textInput.x}
-            y={textInput.y}
-            color={color}
-            onCommit={commitText}
-          />
-        )}
 
         {/* Keyboard shortcut legend */}
         <div
@@ -754,15 +552,11 @@ export default function ScratchCanvas() {
           }}
         >
           {[
-            ["V", "select"],
+            ["V", "select / pan"],
             ["P", "pen"],
-            ["L", "line"],
-            ["R", "rect"],
-            ["E", "ellipse"],
-            ["A", "arrow"],
-            ["T", "text"],
-            ["N", "node"],
             ["X", "erase"],
+            ["Wheel", "scroll"],
+            ["Ctrl + Wheel", "zoom"],
           ].map(([k, l]) => (
             <span
               key={k}

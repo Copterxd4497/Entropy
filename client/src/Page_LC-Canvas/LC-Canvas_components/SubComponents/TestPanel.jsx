@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useProblemContext } from "../../../Page_LC-Problem/context/ProblemContext";
+import MathText from "../../../components/SubComponents/MathText";
 
 function ManualInputTab({ results, onSubmit, isRunning, isSolved, problem }) {
   const [selectedChoice, setSelectedChoice] = useState("");
@@ -65,7 +66,9 @@ function ManualInputTab({ results, onSubmit, isRunning, isSolved, problem }) {
               onChange={(e) => setSelectedChoice(e.target.value)}
               disabled={isRunning}
             />
-            <span>{choice.label}</span>
+            <span>
+              <MathText>{choice.label}</MathText>
+            </span>
           </label>
         ))}
       </div>

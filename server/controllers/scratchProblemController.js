@@ -69,15 +69,17 @@ export const updateScratchProblemStatus = async (req, res) => {
 
   try {
     let updatedScratchProblem;
+    let updatedScratchProblemTopic;
     if (isNumeric) {
       updatedScratchProblem = await ScratchProblem.findOneAndUpdate(
         { id: parseInt(id, 10) },
         { status, solved },
         { new: true },
       );
-      await ScratchProblemTopics.findOneAndUpdate(
+      updatedScratchProblemTopic = await ScratchProblemTopics.findOneAndUpdate(
         { id: parseInt(id, 10) },
         { solved },
+        { new: true },
       );
     } else {
       updatedScratchProblem = await ScratchProblem.findByIdAndUpdate(
@@ -85,14 +87,22 @@ export const updateScratchProblemStatus = async (req, res) => {
         { status, solved },
         { new: true },
       );
-      await ScratchProblemTopics.findByIdAndUpdate(id, { solved });
+      updatedScratchProblemTopic = await ScratchProblemTopics.findByIdAndUpdate(
+        id,
+        { solved },
+        { new: true },
+      );
     }
 
     if (!updatedScratchProblem) {
       return res.status(404).json({ message: "Scratch problem not found" });
     }
 
-    res.json({ success: true, scratchProblem: updatedScratchProblem });
+    res.json({
+      success: true,
+      scratchProblem: updatedScratchProblem,
+      scratchProblemTopic: updatedScratchProblemTopic,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
