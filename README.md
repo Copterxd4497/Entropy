@@ -1,6 +1,10 @@
 # Entropy 2.0 — what you need to run this project
 ### Check it out https://entropy-ashen.vercel.app/
 
+### Homepage
+![Uploading image.png…]()
+
+
 # This is a Node.js app (React + Vite frontend, Express + MongoDB backend).
 # Dependencies are installed with npm, not pip.
 
