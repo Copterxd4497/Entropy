@@ -1,13 +1,16 @@
 # Entropy 2.0 — what you need to run this project
-### Check it out https://entropy-ashen.vercel.app/
+### Check it out https://entropy-ashen.vercel.app/ 
+### Warning: Wait 15 seconds for data to load
 
 ### Homepage
 <img width="1793" height="957" alt="image" src="https://github.com/user-attachments/assets/340361f6-a53c-4363-a97d-88829e1302b5" />
 
 
+<img width="1793" height="957" alt="image" src="https://github.com/user-attachments/assets/7922a20b-a725-41b3-a643-65a11f12e89b" />
+
+
 # This is a Node.js app (React + Vite frontend, Express + MongoDB backend).
 # Dependencies are installed with npm, not pip.
-<img width="1793" height="957" alt="Screenshot from 2026-07-23 23-02-19" src="https://github.com/user-attachments/assets/69c57e83-84cf-42d2-a167-26cf2d18e13c" />
 
 ## System requirements
 
