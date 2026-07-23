@@ -1,6 +1,6 @@
 # Entropy 2.0 — what you need to run this project
 ### Check it out https://entropy-ashen.vercel.app/ 
-### Warning: Wait 15 seconds for data to load
+### ⚠️⚠️Warning: Wait 15 seconds for data to load⚠️⚠️
 
 ### Homepage
 <img width="1793" height="957" alt="image" src="https://github.com/user-attachments/assets/340361f6-a53c-4363-a97d-88829e1302b5" />
