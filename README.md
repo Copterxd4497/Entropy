@@ -2,11 +2,12 @@
 ### Check it out https://entropy-ashen.vercel.app/
 
 ### Homepage
-![Uploading image.png…]()
+<img width="1793" height="957" alt="image" src="https://github.com/user-attachments/assets/340361f6-a53c-4363-a97d-88829e1302b5" />
 
 
 # This is a Node.js app (React + Vite frontend, Express + MongoDB backend).
 # Dependencies are installed with npm, not pip.
+<img width="1793" height="957" alt="Screenshot from 2026-07-23 23-02-19" src="https://github.com/user-attachments/assets/69c57e83-84cf-42d2-a167-26cf2d18e13c" />
 
 ## System requirements
 
@@ -31,6 +32,7 @@ Terminal 2 — backend (when server.js is implemented):
   cd server && node server.js
 
 ## Packages (installed automatically by npm)
+![Uploading image.png…]()
 
 Client (client/package.json):
   react, react-dom
