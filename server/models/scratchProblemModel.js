@@ -31,6 +31,19 @@ const scratchProblemSchema = new mongoose.Schema({
   description: [descriptionSchema],
   examples: [exampleSchema],
   constraints: [String],
+  choices: [
+    {
+      id: {
+        type: String,
+        required: true,
+      },
+      text: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+  correctChoice: String,
   answer: String,
 });
 

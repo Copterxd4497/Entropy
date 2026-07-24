@@ -1,0 +1,111 @@
+.subject-page {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(255, 192, 30, 0.08), transparent 31rem),
+    var(--bg-base);
+  color: var(--text-primary);
+}
+
+.subject-page__header {
+  height: 68px;
+  width: min(1060px, calc(100% - 40px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 42px 1fr minmax(220px, 420px) auto;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.subject-page__back {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  background: var(--bg-raised);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 19px;
+  cursor: pointer;
+}
+
+.subject-page__back:hover { color: var(--accent); border-color: var(--accent); }
+
+.subject-page__brand { color: #fff; font-size: 14px; font-weight: 600; letter-spacing: -0.3px; }
+.subject-page__brand-mark { color: var(--accent); margin-right: 7px; }
+
+.subject-page__progress { display: flex; gap: 5px; }
+.subject-page__progress-segment { height: 5px; flex: 1; border-radius: 999px; background: var(--border-soft); }
+.subject-page__progress-segment--active { background: var(--accent); box-shadow: 0 0 12px rgba(255, 192, 30, 0.45); }
+.subject-page__step { color: var(--text-faint); font-size: 11px; }
+
+.subject-page__content {
+  width: min(880px, calc(100% - 40px));
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 52px 0 120px;
+}
+
+.subject-page__eyebrow { color: var(--accent); font-size: 11px; font-weight: 600; letter-spacing: 1.2px; margin-bottom: 17px; }
+.subject-page h1 { color: #fff; font-size: clamp(27px, 4vw, 38px); letter-spacing: -1.8px; line-height: 1.18; }
+.subject-page__intro { max-width: 570px; color: var(--text-muted); font-size: 14px; line-height: 1.75; margin-top: 16px; }
+
+.subject-page__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 44px; }
+
+.subject-card {
+  position: relative;
+  min-height: 254px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 30px;
+  text-align: left;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--bg-raised);
+  color: var(--text-primary);
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.subject-card:hover { transform: translateY(-4px); border-color: #555; background: #222; }
+.subject-card--selected { border-color: var(--accent); background: linear-gradient(135deg, rgba(255, 192, 30, 0.14), #222 70%); box-shadow: 0 14px 38px rgba(0, 0, 0, 0.28); }
+.subject-card__glow { position: absolute; width: 160px; height: 160px; right: -52px; top: -64px; border-radius: 50%; opacity: 0.7; }
+.subject-card--math .subject-card__glow { background: radial-gradient(circle, rgba(255, 192, 30, 0.33), transparent 68%); }
+.subject-card--programming .subject-card__glow { background: radial-gradient(circle, rgba(0, 184, 163, 0.32), transparent 68%); }
+.subject-card__icon { z-index: 1; display: grid; place-items: center; width: 55px; height: 55px; border: 1px solid currentColor; border-radius: 9px; color: var(--accent); background: rgba(255, 192, 30, 0.1); font-size: 25px; font-weight: 600; }
+.subject-card--programming .subject-card__icon { color: var(--easy); background: rgba(0, 184, 163, 0.11); }
+.subject-card__name { z-index: 1; color: #fff; font-size: 21px; font-weight: 600; letter-spacing: -0.8px; margin-top: auto; }
+.subject-card__description { z-index: 1; max-width: 260px; color: var(--text-muted); font-size: 12px; line-height: 1.65; margin-top: 9px; }
+.subject-card__select-indicator { position: absolute; right: 18px; bottom: 18px; display: grid; place-items: center; width: 23px; height: 23px; border: 1px solid var(--border-soft); border-radius: 50%; color: #1a1a1a; font-size: 13px; font-weight: 700; }
+.subject-card--selected .subject-card__select-indicator { border-color: var(--accent); background: var(--accent); }
+
+.subject-page__footer { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: center; padding: 24px 20px; border-top: 1px solid var(--border); background: rgba(30, 30, 30, 0.86); backdrop-filter: blur(12px); }
+.subject-page__continue { min-width: 210px; padding: 13px 22px; border: 1px solid #ffcf53; border-radius: 7px; background: var(--accent); color: #1a1a1a; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform 0.15s, background 0.15s; }
+.subject-page__continue:hover { transform: translateY(-2px); background: #ffcb42; }
+.subject-page__continue span { margin-left: 12px; font-size: 16px; }
+
+.onboarding-form { max-width: 680px; }
+.onboarding-options { display: grid; gap: 11px; margin-top: 38px; }
+.onboarding-option { display: flex; align-items: center; gap: 17px; width: 100%; padding: 19px 21px; border: 1px solid var(--border-soft); border-radius: 8px; background: var(--bg-raised); color: var(--text-primary); text-align: left; font: inherit; cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.15s; }
+.onboarding-option:hover { border-color: #555; background: #222; transform: translateX(3px); }
+.onboarding-option--selected { border-color: var(--accent); background: rgba(255, 192, 30, 0.09); }
+.onboarding-option__radio { flex: 0 0 auto; width: 19px; height: 19px; border: 1px solid var(--border-soft); border-radius: 50%; }
+.onboarding-option--selected .onboarding-option__radio { border: 5px solid var(--accent); }
+.onboarding-option strong { display: block; color: #fff; font-size: 13px; font-weight: 600; }
+.onboarding-option small { display: block; color: var(--text-muted); font-size: 11px; line-height: 1.55; margin-top: 5px; }
+
+@media (max-width: 620px) {
+  .subject-page__header { width: min(100% - 28px, 1060px); grid-template-columns: 42px 1fr auto; gap: 11px; }
+  .subject-page__progress { display: none; }
+  .subject-page__content { width: min(100% - 32px, 880px); justify-content: flex-start; padding-top: 72px; }
+  .subject-page__cards { grid-template-columns: 1fr; margin-top: 31px; }
+  .subject-card { min-height: 192px; }
+}
